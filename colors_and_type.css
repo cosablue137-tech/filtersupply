@@ -1,0 +1,262 @@
+/* ============================================================
+   FILTER SUPPLY — Foundations
+   Self-roasted specialty coffee · Fukuoka, Japan
+   "間" (ma) — the design disappears; only the object remains.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&family=Noto+Serif+JP:wght@300;400;500&display=swap");
+
+:root {
+  /* --- Base palette ------------------------------------------------
+     Monochrome, warm. No accent colors — ever.
+     Pure ink black on a warm off-white canvas. */
+  --canvas:      #f8f7f5;  /* primary surface — warmer, quieter than white */
+  --canvas-deep: #f1efeb;  /* alternating section / subtle fill */
+  --canvas-card: #ffffff;  /* the one place pure white appears: product stills */
+
+  --ink:         #000000;  /* all text & UI — pure ink */
+  --ink-80:      rgba(0,0,0,0.80);
+  --ink-55:      rgba(0,0,0,0.55);  /* secondary / supporting prose */
+  --mute:        #8a857d;  /* warm gray — metadata, captions, JP texture */
+
+  --line:        rgba(0,0,0,0.12); /* hairline borders */
+  --line-strong: rgba(0,0,0,0.30); /* dividers, focus */
+
+  /* --- Type families ----------------------------------------------- */
+  /* Latin editorial (romaji / English texture) */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body:    "Lora", Georgia, serif;
+  --font-meta:    "Inter", system-ui, -apple-system, sans-serif;
+  /* Japanese is now PRIMARY. A refined Mincho carries display + body. */
+  --font-jp:        "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-jp-display:"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+
+  /* --- Type scale (editorial, generous) ---------------------------- */
+  --t-hero:    clamp(3.25rem, 7vw, 6.5rem);  /* Playfair 400 */
+  --t-display: clamp(2.5rem, 5vw, 4rem);
+  --t-h1:      clamp(2rem, 3.6vw, 3rem);
+  --t-h2:      clamp(1.5rem, 2.4vw, 2rem);
+  --t-h3:      1.375rem;
+  --t-body-lg: 1.1875rem;   /* 19px Lora */
+  --t-body:    1.0625rem;   /* 17px Lora */
+  --t-small:   0.9375rem;   /* 15px */
+  --t-meta:    0.75rem;     /* 12px Inter, tracked */
+  --t-micro:   0.6875rem;   /* 11px Inter, tracked */
+
+  --lh-tight:  1.08;
+  --lh-snug:   1.3;
+  --lh-body:   1.7;
+
+  --track-meta:  0.18em;  /* eyebrows / labels — wide tracking */
+  --track-micro: 0.24em;
+  --track-tight: -0.01em; /* large Playfair sits a touch tighter */
+
+  /* --- Spacing (ma — built for emptiness) -------------------------- */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  16px;
+  --s-4:  24px;
+  --s-5:  40px;
+  --s-6:  64px;
+  --s-7:  96px;
+  --s-8:  144px;
+  --s-9:  224px;   /* section breathing room */
+
+  --gutter:  clamp(24px, 6vw, 120px); /* page margin */
+  --measure: 34rem;                   /* max prose width */
+
+  /* --- Geometry & elevation ---------------------------------------- */
+  --radius: 0;            /* zero radius everywhere — non-negotiable */
+  --shadow: none;         /* no drop shadows — ever */
+  --border:  1px solid var(--line);
+  --border-ink: 1px solid var(--ink);
+
+  /* --- Motion ------------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --fade: opacity 0.9s var(--ease);   /* the only animation: a quiet fade-in */
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT DEFAULTS
+   Pull these in wherever you write Filter Supply surfaces.
+   ============================================================ */
+
+.fs-root {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Editorial display — Playfair, weight 400 ONLY. Never bold. */
+.fs-hero,
+.fs-display,
+.fs-h1,
+.fs-h2,
+.fs-h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+.fs-hero    { font-size: var(--t-hero); }
+.fs-display { font-size: var(--t-display); }
+.fs-h1      { font-size: var(--t-h1); }
+.fs-h2      { font-size: var(--t-h2); line-height: var(--lh-snug); }
+.fs-h3      { font-size: var(--t-h3); line-height: var(--lh-snug); }
+
+/* Japanese-PRIMARY display — Mincho (Noto Serif JP), light/regular weight.
+   Japanese needs a touch more leading and a hair of tracking to breathe. */
+.fs-hero-jp,
+.fs-display-jp,
+.fs-h1-jp,
+.fs-h2-jp {
+  font-family: var(--font-jp-display);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  line-height: 1.34;
+  text-wrap: balance;
+}
+.fs-hero-jp    { font-size: clamp(2.75rem, 5.6vw, 5rem); font-weight: 300; line-height: 1.28; }
+.fs-display-jp { font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 300; }
+.fs-h1-jp      { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+.fs-h2-jp      { font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
+
+/* Romaji / English texture sitting beside Japanese — small, tracked, muted. */
+.fs-romaji {
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* Japanese body prose — Mincho, generous leading. */
+.fs-body-jp {
+  font-family: var(--font-jp);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: 2;
+  max-width: var(--measure);
+  color: var(--ink);
+}
+
+/* Body — Lora */
+.fs-body {
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+.fs-body-lg { font-size: var(--t-body-lg); }
+.fs-italic  { font-style: italic; }
+
+/* Metadata / labels / eyebrows — Inter, uppercase, tracked */
+.fs-meta,
+.fs-eyebrow,
+.fs-label {
+  font-family: var(--font-meta);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink);
+}
+.fs-micro {
+  font-family: var(--font-meta);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* Japanese texture — woven in, never a "translation" */
+.fs-jp {
+  font-family: var(--font-jp);
+  font-weight: 400;
+}
+
+/* Price & spec figures — Inter tabular, quiet */
+.fs-price {
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   PRIMITIVES
+   ============================================================ */
+
+/* Link — ink, hairline underline appears on hover. No color shift. */
+.fs-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s var(--ease);
+}
+.fs-link:hover { border-color: var(--ink); }
+
+/* Button — squared, hairline. Press = fill inverts. No shadow, no scale. */
+.fs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  font-family: var(--font-meta);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  padding: 16px 32px;
+  white-space: nowrap;
+  border: var(--border-ink);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+.fs-btn:hover  { background: var(--ink); color: var(--canvas); }
+.fs-btn:active { background: var(--ink-80); }
+
+.fs-btn--solid {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.fs-btn--solid:hover { background: transparent; color: var(--ink); }
+
+/* Input — hairline bottom rule only. */
+.fs-input {
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 0;
+  padding: 10px 2px;
+  outline: none;
+  transition: border-color 0.4s var(--ease);
+}
+.fs-input::placeholder { color: var(--mute); }
+.fs-input:focus { border-color: var(--ink); }
+
+/* Hairline rule */
+.fs-rule { border: none; border-top: 1px solid var(--line); }
+
+/* The only motion: a quiet fade on load */
+@keyframes fs-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.fs-fade { animation: fs-fade-in 0.9s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-fade { animation: none; }
+}
