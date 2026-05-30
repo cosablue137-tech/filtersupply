@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Filter Supply — 福岡の自家焙煎スペシャルティコーヒー</title>
+<link rel="stylesheet" href="beyond.css" />
+</head>
+<body>
+
+<div class="anno">ハンドドリップに特化した、ブラックコーヒー専門店 — 福岡・高砂</div>
+
+<header class="hdr">
+  <nav class="hdr__nav">
+    <a href="index.html" class="is-active">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="#about">About</a>
+    <a href="#journal">Journal</a>
+  </nav>
+  <a class="hdr__brand" href="index.html" aria-label="Filter Supply"><img src="assets/logo-ink.png" alt="Filter Supply" /></a>
+  <div class="hdr__tools">
+    <button aria-label="検索"><svg class="icon" width="17" height="17" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="21" y2="21"/></svg></button>
+    <a href="cart.html"><span class="lbl">Cart</span> (<span data-cart-count>0</span>)</a>
+    <button class="hdr__burger" aria-label="メニュー"><svg class="icon" width="20" height="20" viewBox="0 0 24 24"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__pane hero__pane--dark">
+      <image-slot id="hero-a" shape="rect" fit="cover" placeholder="ヒーロー左 — 抽出のワンシーン"></image-slot>
+      <div class="hero__overlay">
+        <p class="eyebrow">Fukuoka · Since 2019</p>
+        <h2 class="display">A Cup<br />of Time</h2>
+        <a class="btn btn--light" href="shop.html">Shop Coffee</a>
+      </div>
+    </div>
+    <div class="hero__pane">
+      <image-slot id="hero-b" shape="rect" fit="cover" placeholder="ヒーロー右 — 商品を持つ手"></image-slot>
+    </div>
+  </section>
+
+  <!-- BEST SELLERS -->
+  <section class="wrap" style="padding:clamp(56px,7vw,100px) 0;">
+    <div class="sec-head"><span class="eyebrow">よく選ばれています</span><h2 class="sec-title" style="margin-top:8px;">Best Sellers</h2></div>
+    <div class="pgrid" id="bestsellers"></div>
+    <div style="text-align:center;margin-top:clamp(40px,5vw,60px);"><a class="ulink" href="shop.html">View Collection</a></div>
+  </section>
+
+  <!-- DARK FEATURE -->
+  <section class="feature fade">
+    <div class="feature__media"><image-slot id="feat-set" shape="rect" fit="contain" placeholder="瓶入りのコーヒー豆"></image-slot></div>
+    <p class="eyebrow">Reusable</p>
+    <h2 class="feature__title">Beans in a Bottle</h2>
+    <a class="btn btn--light" href="shop.html">About the Bottle</a>
+  </section>
+
+  <!-- BRAND BAND -->
+  <section class="band fade" id="about">
+    <p class="eyebrow">Roasted in Fukuoka · Takasago</p>
+    <div class="band__name"><img src="assets/logo-ink.png" alt="Filter Supply" style="height:clamp(26px,3.4vw,44px);width:auto;display:inline-block;" /></div>
+  </section>
+
+  <!-- FEATURED PRODUCT -->
+  <section class="wrap fade">
+    <div class="fprod">
+      <div class="fprod__media">
+        <div class="fprod__thumbs">
+          <div class="fprod__thumb"><image-slot id="fp-t1" shape="rect" fit="contain" placeholder="サブ1"></image-slot></div>
+          <div class="fprod__thumb"><image-slot id="fp-t2" shape="rect" fit="contain" placeholder="サブ2"></image-slot></div>
+          <div class="fprod__thumb"><image-slot id="fp-t3" shape="rect" fit="contain" placeholder="サブ3"></image-slot></div>
+        </div>
+        <div class="fprod__main"><image-slot id="fp-main" shape="rect" fit="contain" placeholder="メイン商品写真"></image-slot></div>
+      </div>
+      <div class="fprod__info">
+        <span class="eyebrow">Light to Dark</span>
+        <h2>The Tasting Flight</h2>
+        <p class="fprod__price">¥4,980</p>
+        <div class="fprod__buy">
+          <button class="btn btn--block" data-add="The Tasting Flight">Add to Cart</button>
+          <button class="btn btn--ghost btn--block">Buy It Now</button>
+        </div>
+        <div class="fprod__acc">
+          <details class="acc-item" open>
+            <summary>Description <span class="pm">+</span></summary>
+            <div class="acc-item__body">浅煎りから深煎りまで、常時5〜7種類。産地ごとの個性を少量ずつ飲み比べできるセットです。お好みの一杯を、ここから。各100g。</div>
+          </details>
+          <details class="acc-item">
+            <summary>Brewing <span class="pm">+</span></summary>
+            <div class="acc-item__body">ハンドドリップ｜18g : 270ml・92°C・2:45。お好みで調整してください。</div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORIES GRID -->
+  <section class="stories fade">
+    <div class="stories__grid">
+      <div class="stories__cell s-tall"><image-slot id="st-1" shape="rect" fit="cover" placeholder="物語1"></image-slot></div>
+      <div class="stories__cell"><image-slot id="st-2" shape="rect" fit="cover" placeholder="物語2"></image-slot></div>
+      <div class="stories__cell"><image-slot id="st-3" shape="rect" fit="cover" placeholder="物語3"></image-slot></div>
+      <div class="stories__cell s-wide stories__cell--copy">
+        <span class="eyebrow" style="color:rgba(255,255,255,.6)">Journal</span>
+        <h3 class="h-serif">Filter Supply Stories</h3>
+        <a class="ulink" style="color:#fff" href="#journal">Follow on Instagram</a>
+      </div>
+      <div class="stories__cell"><image-slot id="st-4" shape="rect" fit="cover" placeholder="物語4"></image-slot></div>
+      <div class="stories__cell"><image-slot id="st-5" shape="rect" fit="cover" placeholder="物語5"></image-slot></div>
+    </div>
+  </section>
+
+  <!-- IMAGE ROW -->
+  <section class="irow fade">
+    <div class="irow__cell"><image-slot id="ir-1" shape="rect" fit="cover" placeholder="風景1"></image-slot><div class="irow__label">Single Origin<small>シングルオリジン</small></div></div>
+    <div class="irow__cell"><image-slot id="ir-2" shape="rect" fit="cover" placeholder="風景2"></image-slot><div class="irow__label">Blends<small>ブレンド</small></div></div>
+    <div class="irow__cell"><image-slot id="ir-3" shape="rect" fit="cover" placeholder="風景3"></image-slot><div class="irow__label">Drip Bags<small>ドリップバッグ</small></div></div>
+    <div class="irow__cell"><image-slot id="ir-4" shape="rect" fit="cover" placeholder="風景4"></image-slot><div class="irow__label">Equipment<small>器具</small></div></div>
+  </section>
+
+  <!-- BIG PRODUCT HERO -->
+  <section class="bighero fade"><image-slot id="bighero" shape="rect" fit="cover" placeholder="大きな商品写真（横長）"></image-slot></section>
+
+  <!-- COLLECTION ROW -->
+  <section class="wrap fade" style="padding:clamp(56px,7vw,100px) 0;">
+    <div class="sec-head"><span class="eyebrow">この季節のおすすめ</span><h2 class="sec-title" style="margin-top:8px;">Seasonal Selection</h2></div>
+    <div class="pgrid" id="seasonal"></div>
+  </section>
+
+  <!-- WHOLESALE / SPLIT -->
+  <section class="split fade">
+    <div class="split__text">
+      <span class="eyebrow">Wholesale</span>
+      <h2>Coffee for<br />Your Space.</h2>
+      <p>カフェ、レストラン、ホテル、オフィスへ。焙煎豆と生豆の卸売を承ります。
+一杯の価値を、空間とともにお届けします。</p>
+      <div style="margin-top:30px;">
+        <p class="eyebrow" style="color:rgba(255,255,255,.55);margin-bottom:10px;">For</p>
+        <p style="font-family:var(--serif);font-size:1.15rem;line-height:1.7;color:rgba(255,255,255,.82);margin:0;">Cafés · Restaurants · Hotels<br />Lifestyle Stores · Roasters · Offices</p>
+      </div>
+      <a class="ulink" style="color:#fff;margin-top:26px;" href="#wholesale">Wholesale Inquiry</a>
+    </div>
+    <div class="split__media"><image-slot id="split-1" shape="rect" fit="cover" placeholder="焙煎所の写真"></image-slot></div>
+  </section>
+
+  <!-- BLOG -->
+  <section class="wrap fade" id="journal" style="padding:clamp(56px,7vw,100px) 0;">
+    <div class="sec-head"><h2 class="sec-title">From the Journal</h2></div>
+    <div class="blog__grid">
+      <article class="bpost"><div class="bpost__media"><image-slot id="bp-1" shape="rect" fit="cover" placeholder="記事1"></image-slot></div><h3 class="bpost__title">アチェ州への旅 — スマトラの生産者を訪ねて</h3><p class="bpost__date">2023.05.18</p><a class="ulink" href="#">Continue Reading</a></article>
+      <article class="bpost"><div class="bpost__media"><image-slot id="bp-2" shape="rect" fit="cover" placeholder="記事2"></image-slot></div><h3 class="bpost__title">瓶を、持って。— リユースという選択</h3><p class="bpost__date">2024.02.10</p><a class="ulink" href="#">Continue Reading</a></article>
+      <article class="bpost"><div class="bpost__media"><image-slot id="bp-3" shape="rect" fit="cover" placeholder="記事3"></image-slot></div><h3 class="bpost__title">築50年の古民家で — 和と洋が混ざる場所</h3><p class="bpost__date">2023.11.04</p><a class="ulink" href="#">Continue Reading</a></article>
+    </div>
+  </section>
+
+  <!-- FULL-BLEED CTA -->
+  <section class="fbcta fade">
+    <image-slot id="fbcta" shape="rect" fit="cover" placeholder="フルブリードの風景写真"></image-slot>
+    <div class="fbcta__in">
+      <p class="eyebrow" style="color:rgba(255,255,255,.8)">Fukuoka · Takasago</p>
+      <h2 class="display">Visit the Store</h2>
+      <a class="btn btn--light" href="#about">Store Info</a>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="news">
+    <h2 class="news__title">Join the Mailing List</h2>
+    <p>新しい焙煎や入荷のお知らせ</p>
+    <form class="news__form" onsubmit="this.querySelector('input').value='';this.querySelector('button').textContent='Thank you';return false;">
+      <input type="email" required placeholder="メールアドレス" />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="ftr__top">
+    <div>
+      <h3 class="ftr__head">About the Store</h3>
+      <p>日本・福岡から、自家焙煎のスペシャルティコーヒーをお届けする、ハンドドリップ専門店です。</p>
+      <div class="ftr__social">
+        <a href="#" aria-label="Instagram"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="X"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M4 4 L20 20 M20 4 L4 20"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h3 class="ftr__head">Quick Links</h3>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Wholesale</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="ftr__head">Mailing List</h3>
+      <p>新着・限定の入荷情報をお届けします。</p>
+      <form class="ftr__news" onsubmit="this.querySelector('button').textContent='OK ✓';return false;">
+        <input type="email" placeholder="メールアドレス" />
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="ftr__base">
+    <span>© 2026 Filter Supply · 福岡市</span>
+    <span>Powered by Coffee</span>
+  </div>
+</footer>
+
+<script src="assets/image-slot.js"></script>
+<script src="assets/products.js"></script>
+<script src="assets/store.js"></script>
+</body>
+</html>
