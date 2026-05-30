@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>{{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.page' | t }} {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+
+    {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
+
+    {{ content_for_header }}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      window.Shopify = window.Shopify || {};
+      window.Shopify.routes = window.Shopify.routes || {};
+      window.Shopify.routes.root = "{{ routes.root_url }}{% if routes.root_url != '/' %}/{% endif %}";
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  </head>
+
+  <body>
+    {% section 'announcement' %}
+    {% section 'header' %}
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+    {% section 'footer' %}
+  </body>
+</html>

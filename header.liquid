@@ -1,0 +1,34 @@
+{%- comment -%} Filter Supply — header (centered logo, Beyond style) {%- endcomment -%}
+<header class="hdr">
+  <nav class="hdr__nav">
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}"{% if link.active %} class="is-active"{% endif %}>{{ link.title }}</a>
+    {%- endfor -%}
+  </nav>
+
+  <a class="hdr__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name }}" width="240">
+    {%- else -%}
+      <img src="{{ 'logo-ink.png' | asset_url }}" alt="{{ shop.name }}" width="240">
+    {%- endif -%}
+  </a>
+
+  <div class="hdr__tools">
+    <a href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t }}">
+      {% render 'icon', name: 'search', size: 17 %}
+    </a>
+    <a href="{{ routes.cart_url }}"><span class="lbl">{{ 'cart.title' | t }}</span> (<span data-cart-count>{{ cart.item_count }}</span>)</a>
+    <button class="hdr__burger" type="button" aria-label="メニュー">{% render 'icon', name: 'menu', size: 20 %}</button>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "ヘッダー",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "ロゴ（黒・透過PNG推奨）" },
+    { "type": "link_list", "id": "menu", "label": "メニュー", "default": "main-menu" }
+  ]
+}
+{% endschema %}

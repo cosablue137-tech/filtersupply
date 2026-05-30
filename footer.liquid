@@ -1,0 +1,60 @@
+{%- comment -%} Filter Supply — footer (cream, 3 columns) {%- endcomment -%}
+<footer class="ftr">
+  <div class="ftr__top">
+    <div>
+      <h3 class="ftr__head">{{ section.settings.about_head | default: 'About the Store' }}</h3>
+      <p>{{ section.settings.about_text }}</p>
+      <div class="ftr__social">
+        {%- if section.settings.instagram != blank -%}<a href="{{ section.settings.instagram }}" aria-label="Instagram">{% render 'icon', name: 'instagram', size: 18 %}</a>{%- endif -%}
+        {%- if section.settings.twitter != blank -%}<a href="{{ section.settings.twitter }}" aria-label="X">{% render 'icon', name: 'x', size: 18 %}</a>{%- endif -%}
+      </div>
+    </div>
+
+    <div>
+      <h3 class="ftr__head">{{ section.settings.links_head | default: 'Quick Links' }}</h3>
+      <ul>
+        {%- for link in section.settings.menu.links -%}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="ftr__head">{{ section.settings.news_head | default: 'Mailing List' }}</h3>
+      <p>{{ section.settings.news_text }}</p>
+      {%- form 'customer', class: 'ftr__news' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {%- if form.posted_successfully? -%}
+          <p style="margin-top:8px;">{{ 'newsletter.success' | t }}</p>
+        {%- else -%}
+          <input type="email" name="contact[email]" placeholder="{{ 'newsletter.placeholder' | t }}" required>
+          <button type="submit">{{ 'newsletter.join' | t }}</button>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+
+  <div class="ftr__base">
+    <span>© {{ 'now' | date: '%Y' }} {{ shop.name }} · {{ section.settings.location }}</span>
+    <span>{{ section.settings.meta }}</span>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "フッター",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "ロゴ（未使用可）" },
+    { "type": "text", "id": "about_head", "label": "見出し1", "default": "About the Store" },
+    { "type": "textarea", "id": "about_text", "label": "説明", "default": "日本・福岡から、自家焙煎のスペシャルティコーヒーをお届けする、ハンドドリップ専門店です。" },
+    { "type": "url", "id": "instagram", "label": "Instagram URL" },
+    { "type": "url", "id": "twitter", "label": "X (Twitter) URL" },
+    { "type": "text", "id": "links_head", "label": "見出し2", "default": "Quick Links" },
+    { "type": "link_list", "id": "menu", "label": "リンクメニュー", "default": "footer" },
+    { "type": "text", "id": "news_head", "label": "見出し3", "default": "Mailing List" },
+    { "type": "textarea", "id": "news_text", "label": "ニュースレター文", "default": "新着・限定の入荷情報をお届けします。" },
+    { "type": "text", "id": "location", "label": "拠点", "default": "福岡市" },
+    { "type": "text", "id": "meta", "label": "右下メタ", "default": "Powered by Coffee" }
+  ]
+}
+{% endschema %}

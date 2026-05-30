@@ -1,0 +1,13 @@
+{%- comment -%} Filter Supply — thin announcement bar {%- endcomment -%}
+{%- if section.settings.text != blank -%}
+  <div class="anno">{{ section.settings.text }}</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "アナウンス",
+  "settings": [
+    { "type": "text", "id": "text", "label": "テキスト", "default": "ハンドドリップに特化した、ブラックコーヒー専門店 — 福岡・高砂" }
+  ]
+}
+{% endschema %}

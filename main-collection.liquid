@@ -1,0 +1,62 @@
+{%- comment -%} Filter Supply — collection (Shop All) {%- endcomment -%}
+<section class="chero">
+  {%- if collection.image -%}<img src="{{ collection.image | image_url: width: 2000 }}" alt="">
+  {%- elsif section.settings.fallback_image != blank -%}<img src="{{ section.settings.fallback_image | image_url: width: 2000 }}" alt="">{%- endif -%}
+  <h1>{{ collection.title | default: 'Shop All' }}</h1>
+</section>
+
+<div class="filterbar">
+  <div class="filterbar__left">
+    <button type="button">Browse {% render 'icon', name: 'chevron', size: 11 %}</button>
+    <button type="button">Sort By {% render 'icon', name: 'chevron', size: 11 %}</button>
+    <button type="button">Refine {% render 'icon', name: 'chevron', size: 11 %}</button>
+  </div>
+  <div class="filterbar__view">
+    <button type="button" aria-label="グリッド">{% render 'icon', name: 'grid', size: 15 %}</button>
+    <button type="button" aria-label="リスト">{% render 'icon', name: 'list', size: 15 %}</button>
+  </div>
+</div>
+
+<section class="wrap" style="padding:clamp(40px,5vw,72px) 0;">
+  {%- paginate collection.products by 12 -%}
+    <div class="pgrid">
+      {%- for product in collection.products -%}
+        {% render 'product-card', product: product %}
+        {%- if forloop.index == 3 and section.settings.promo_image != blank -%}
+          <a class="ptile" href="{{ section.settings.promo_link | default: '#' }}">
+            <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="">
+            <div class="ptile__in">
+              <span class="eyebrow">{{ section.settings.promo_eyebrow }}</span>
+              <h3 class="h-serif">{{ section.settings.promo_heading }}</h3>
+              <span class="ulink" style="color:#fff">{{ section.settings.promo_link_label }}</span>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- else -%}
+        <p class="serif" style="font-size:1.4rem;">{{ 'collection.empty' | t }}</p>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav style="margin-top:64px;display:flex;gap:20px;justify-content:center;">
+        {%- if paginate.previous -%}<a class="ulink" href="{{ paginate.previous.url }}">← {{ 'general.previous' | t }}</a>{%- endif -%}
+        {%- if paginate.next -%}<a class="ulink" href="{{ paginate.next.url }}">{{ 'general.next' | t }} →</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+  {%- endpaginate -%}
+</section>
+
+{% schema %}
+{
+  "name": "コレクション",
+  "settings": [
+    { "type": "image_picker", "id": "fallback_image", "label": "ヘッダー代替画像（コレクション画像が無い時）" },
+    { "type": "header", "content": "プロモタイル（4番目に挿入）" },
+    { "type": "image_picker", "id": "promo_image", "label": "プロモ画像" },
+    { "type": "text", "id": "promo_eyebrow", "label": "ラベル", "default": "Best Sellers" },
+    { "type": "text", "id": "promo_heading", "label": "見出し", "default": "Trendy" },
+    { "type": "text", "id": "promo_link_label", "label": "リンク文言", "default": "See What’s Popular" },
+    { "type": "url", "id": "promo_link", "label": "リンク" }
+  ]
+}
+{% endschema %}

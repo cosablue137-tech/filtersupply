@@ -1,0 +1,23 @@
+{%- comment -%} Filter Supply — dark feature band (set on charcoal) {%- endcomment -%}
+<section class="feature">
+  {%- if section.settings.image != blank -%}
+    <div class="feature__media"><img src="{{ section.settings.image | image_url: width: 1000 }}" alt=""></div>
+  {%- endif -%}
+  {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+  <h2 class="feature__title">{{ section.settings.heading }}</h2>
+  {%- if section.settings.btn_label != blank -%}<a class="btn btn--light" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "ダーク特集",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "画像（透過PNG推奨）" },
+    { "type": "text", "id": "eyebrow", "label": "ラベル", "default": "Reusable" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "Beans in a Bottle" },
+    { "type": "text", "id": "btn_label", "label": "ボタン", "default": "About the Bottle" },
+    { "type": "url", "id": "btn_link", "label": "リンク" }
+  ],
+  "presets": [{ "name": "ダーク特集" }]
+}
+{% endschema %}
