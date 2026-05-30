@@ -1,0 +1,57 @@
+{%- comment -%}
+  Filter Supply — featured product (gallery + info + accordion).
+  Pick a product in the theme editor. Falls back to a placeholder.
+{%- endcomment -%}
+{%- liquid
+  assign product = all_products[section.settings.product]
+-%}
+<section class="wrap" style="padding:clamp(48px,6vw,90px) 0;">
+  <div class="fprod">
+    <div class="fprod__media">
+      <div class="fprod__thumbs">
+        {%- if product != blank -%}
+          {%- for image in product.images limit: 3 -%}
+            <div class="fprod__thumb"><img src="{{ image | image_url: width: 240 }}" alt=""></div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="fprod__thumb"></div><div class="fprod__thumb"></div><div class="fprod__thumb"></div>
+        {%- endif -%}
+      </div>
+      <div class="fprod__main">
+        {%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}">{%- endif -%}
+      </div>
+    </div>
+
+    <div class="fprod__info">
+      <span class="eyebrow">{{ section.settings.eyebrow | default: 'Featured' }}</span>
+      <h2>{{ product.title | default: section.settings.fallback_title }}</h2>
+      <p class="fprod__price">{% if product != blank %}{{ product.price | money }}{% endif %}</p>
+      {%- if product != blank -%}
+        {% form 'product', product, data-cart-form: 'true' %}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <div class="fprod__buy">
+            <button class="btn btn--block" type="submit">{{ 'product.add_to_cart' | t }}</button>
+            <button class="btn btn--ghost btn--block" type="submit" name="checkout">{{ 'product.buy_now' | t }}</button>
+          </div>
+        {% endform %}
+      {%- endif -%}
+      {%- if product.description != blank -%}
+        <div class="fprod__acc">
+          <details class="acc-item" open><summary>{{ 'product.description' | t }} <span class="pm">+</span></summary><div class="acc-item__body">{{ product.description }}</div></details>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "注目の商品",
+  "settings": [
+    { "type": "product", "id": "product", "label": "商品" },
+    { "type": "text", "id": "eyebrow", "label": "ラベル", "default": "Light to Dark" },
+    { "type": "text", "id": "fallback_title", "label": "商品未選択時の見出し", "default": "The Tasting Flight" }
+  ],
+  "presets": [{ "name": "注目の商品" }]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{%- comment -%} Filter Supply — full-bleed CTA band {%- endcomment -%}
+<section class="fbcta fade">
+  {%- if section.settings.image != blank -%}<img src="{{ section.settings.image | image_url: width: 2000 }}" alt="">{%- endif -%}
+  <div class="fbcta__in">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" style="color:rgba(255,255,255,.8)">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <h2 class="display">{{ section.settings.heading }}</h2>
+    {%- if section.settings.btn_label != blank -%}<a class="btn btn--light" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "フルブリードCTA",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "背景画像" },
+    { "type": "text", "id": "eyebrow", "label": "ラベル", "default": "Fukuoka · Takasago" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "Visit the Store" },
+    { "type": "text", "id": "btn_label", "label": "ボタン", "default": "Store Info" },
+    { "type": "url", "id": "btn_link", "label": "リンク" }
+  ],
+  "presets": [{ "name": "フルブリードCTA" }]
+}
+{% endschema %}
