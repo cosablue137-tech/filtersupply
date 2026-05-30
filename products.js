@@ -1,16 +1,30 @@
-/* Filter Supply — sample coffee catalogue (preview only).
-   Reflects the brand: hand-drip black coffee, light → dark,
-   single origins incl. their Aceh (Sumatra) direct trade & Panama. */
+/* FILTER SUPPLY — shared sample catalogue (fake, on-brand).
+   Japanese-primary. Plain script: sets window.FS_PRODUCTS.
+   `jp` is the primary name, `en` is the small romaji/English texture.
+   `cat` drives filtering; the *Jp fields are for display. */
 window.FS_PRODUCTS = [
-  { id: "ethiopia",  name: "Ethiopia — Washed",       notes: "Floral · Bergamot · Clean",     price: 2160, tag: "Light",        kanji: "花" },
-  { id: "aceh",      name: "Indonesia — Aceh",         notes: "Herbal · Brown Sugar · Deep",   price: 2376, tag: "Direct Trade", kanji: "森" },
-  { id: "panama",    name: "Panama — Traditional",     notes: "Honey · Stone Fruit · Round",   price: 2700, tag: "Limited",      kanji: "実" },
-  { id: "guatemala", name: "Guatemala — Antigua",      notes: "Cocoa · Apple · Caramel",       price: 1980, tag: "",             kanji: "豆" },
-  { id: "house",     name: "House Blend",              notes: "Chocolate · Almond · Balanced", price: 1620, tag: "Best Seller",  kanji: "朝" },
-  { id: "dark",      name: "Dark Blend",               notes: "Bitter Cocoa · Fig · Bold",     price: 1728, tag: "Dark",         kanji: "夜" },
-  { id: "kenya",     name: "Kenya — Nyeri",            notes: "Blackcurrant · Bright",         price: 2376, tag: "",             kanji: "赤" },
-  { id: "decaf",     name: "Decaf — Colombia",         notes: "Caramel · Smooth",              price: 1728, tag: "Decaf",        kanji: "静" },
-  { id: "dripbag",   name: "Drip Bag Set ×10",         notes: "Assorted · Gift",               price: 1944, tag: "",             kanji: "袋" },
+  { id: "morning", cat: "blend", jp: "モーニングブレンド", en: "Morning Blend",
+    origin: "ブレンド", originEn: "Blend", process: "ウォッシュト・ナチュラル",
+    roast: "中煎り", roastEn: "Medium", weight: "200g", price: 1800,
+    notes: "穏やかでバランスのよい一杯。ミルクチョコレート、アーモンド、やわらかな柑橘の余韻。一日のはじまりに。", kanji: "朝" },
+  { id: "night", cat: "blend", jp: "ナイトブレンド", en: "Night Blend",
+    origin: "ブレンド", originEn: "Blend", process: "ナチュラル",
+    roast: "深煎り", roastEn: "Dark", weight: "200g", price: 1900,
+    notes: "深く、静かな味わい。ダークカカオ、ドライフィグ、黒糖。一日の終わりに。", kanji: "夜" },
+  { id: "yirgacheffe", cat: "single", jp: "エチオピア イルガチェフェ", en: "Ethiopia Yirgacheffe",
+    origin: "エチオピア", originEn: "Ethiopia", process: "ウォッシュト",
+    roast: "浅煎り", roastEn: "Light", weight: "200g", price: 2200,
+    notes: "ベルガモット、白桃、紅茶。華やかで澄んだ味わい。", kanji: "花" },
+  { id: "antigua", cat: "single", jp: "グアテマラ アンティグア", en: "Guatemala Antigua",
+    origin: "グアテマラ", originEn: "Guatemala", process: "ウォッシュト",
+    roast: "中煎り", roastEn: "Medium", weight: "200g", price: 2000,
+    notes: "カカオ、赤りんご、まろやかなキャラメルの甘み。", kanji: "実" },
+  { id: "nyeri", cat: "single", jp: "ケニア ニエリ", en: "Kenya Nyeri",
+    origin: "ケニア", originEn: "Kenya", process: "ウォッシュト",
+    roast: "浅煎り", roastEn: "Light", weight: "200g", price: 2300,
+    notes: "カシス、トマト、明るく、芯のある酸。", kanji: "赤" },
+  { id: "v60", cat: "equipment", jp: "セラミックドリッパー", en: "Ceramic Dripper",
+    origin: "器具", originEn: "Equipment", process: "磁器・有田焼",
+    roast: "—", roastEn: "—", weight: "01", price: 3200,
+    notes: "一杯ずつ淹れるための円すい型ドリッパー。有田の磁器で仕上げました。", kanji: "器" },
 ];
-
-window.FS_FMT = function (yen) { return "¥" + yen.toLocaleString("ja-JP"); };
