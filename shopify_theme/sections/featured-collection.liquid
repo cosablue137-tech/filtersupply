@@ -9,7 +9,7 @@
     <h2 class="sec-title" style="margin-top:8px;">{{ section.settings.heading }}</h2>
   </div>
 
-  <div class="pgrid">
+  <div class="pgrid pgrid--scroll">
     {%- if collection != blank and collection.products.size > 0 -%}
       {%- for product in collection.products limit: limit -%}
         {% render 'product-card', product: product %}

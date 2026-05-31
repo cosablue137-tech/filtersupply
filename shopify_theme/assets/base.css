@@ -281,6 +281,65 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .acc-item__body { padding: 0 2px 18px; font-size: 13px; color: var(--ink-60); font-family: var(--jp); line-height: 1.9; }
 
 /* ============================================================
+   GIFT SPLIT — image-left editorial (Aesop-inspired)
+   ============================================================ */
+.gift-split {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  min-height: clamp(520px, 60vw, 740px);
+  align-items: stretch;
+}
+.gift-split__image { position: relative; overflow: hidden; background: var(--soft); }
+.gift-split__image image-slot, .gift-split__image img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform .9s cubic-bezier(.25,.46,.45,.94);
+}
+.gift-split:hover .gift-split__image image-slot,
+.gift-split:hover .gift-split__image img { transform: scale(1.03); }
+.gift-split__copy {
+  background: var(--char); color: var(--white);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(48px, 7vw, 96px) clamp(36px, 5vw, 72px);
+}
+.gift-split__copy .eyebrow { color: rgba(255,255,255,.55); margin-bottom: 20px; display: block; }
+.gift-split__title {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem); line-height: 1.1; letter-spacing: .02em;
+  color: var(--white); margin: 0 0 20px; text-wrap: balance;
+}
+.gift-split__body {
+  font-family: var(--jp); font-size: 14px; line-height: 2.1;
+  color: rgba(255,255,255,.62); max-width: 28em; margin: 0 0 34px;
+}
+.gift-split__copy .btn--light { align-self: flex-start; }
+
+/* ============================================================
+   JOURNAL EDITORIAL LIST — compact, text-only
+   ============================================================ */
+.jlist { list-style: none; margin: 0; padding: 0; }
+.jlist__item {
+  display: grid;
+  grid-template-columns: 68px 1fr auto;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 40px);
+  padding: clamp(18px, 2.2vw, 24px) 0;
+  border-bottom: 1px solid var(--line);
+  transition: opacity .35s var(--ease);
+}
+.jlist__item:first-child { border-top: 1px solid var(--line); }
+.jlist__item:hover { opacity: .6; }
+.jlist__date {
+  font-family: var(--sans); font-size: 10px;
+  letter-spacing: var(--track-sm); text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+}
+.jlist__title {
+  font-family: var(--jp); font-weight: 400;
+  font-size: 14px; line-height: 1.7; margin: 0; color: var(--ink);
+}
+.jlist__link { white-space: nowrap; flex-shrink: 0; }
+
+/* ============================================================
    STORIES GRID (dark mosaic)
    ============================================================ */
 .stories { background: var(--char); padding: clamp(40px, 5vw, 70px) var(--gutter); }
@@ -639,8 +698,16 @@ body::after {
   .hero { grid-template-columns: 1fr; min-height: clamp(340px, 60vh, 520px); }
   .hero__pane:last-child { display: none; }
 
+  .gift-split { grid-template-columns: 1fr; }
+  .gift-split__image { min-height: 300px; order: -1; }
+
   .pgrid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
   .blog__grid { grid-template-columns: 1fr; gap: 32px; }
+
+  .jlist__item { grid-template-columns: auto 1fr; grid-template-rows: auto auto; row-gap: 6px; column-gap: 14px; }
+  .jlist__date { grid-column: 1; grid-row: 1; }
+  .jlist__link { grid-column: 2; grid-row: 1; justify-self: end; }
+  .jlist__title { grid-column: 1 / -1; grid-row: 2; }
 
   .cart__head { display: none; }
   .cline { grid-template-columns: 1fr auto; grid-template-areas: "prod total" "qty qty"; gap: 14px; }
@@ -685,4 +752,62 @@ body::after {
   .pcard:hover .pcard__media image-slot, .pcard:hover .pcard__media img { transform: none; }
   .irow__cell image-slot, .irow__cell img { transition: none; }
   .bpost__media image-slot, .bpost__media img { transition: none; }
+}
+
+/* ============================================================
+   PRODUCT SCROLL CAROUSEL
+   ============================================================ */
+.pgrid--scroll {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  gap: clamp(20px, 3vw, 40px); padding: 0 var(--gutter) clamp(20px, 3vw, 32px);
+  scrollbar-width: none; -ms-overflow-style: none; cursor: grab;
+}
+.pgrid--scroll:active { cursor: grabbing; }
+.pgrid--scroll::-webkit-scrollbar { display: none; }
+.pgrid--scroll .pcard { flex: 0 0 clamp(200px, 26vw, 300px); scroll-snap-align: start; }
+.pgrid--scroll .ptile { flex: 0 0 clamp(200px, 26vw, 300px); scroll-snap-align: start; min-height: 340px; }
+
+/* ============================================================
+   REFINED UX LAYER
+   ============================================================ */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+  .cur-dot {
+    position: fixed; top: 0; left: 0; z-index: 99999;
+    width: 6px; height: 6px; background: var(--ink); border-radius: 50%;
+    pointer-events: none; will-change: transform;
+    transition: opacity .25s var(--ease), background-color .3s var(--ease);
+  }
+  .cur-dot.is-light { background: var(--white); }
+  .cur-ring {
+    position: fixed; top: 0; left: 0; z-index: 99998;
+    width: 32px; height: 32px; border: 1px solid rgba(26,26,24,.35); border-radius: 50%;
+    pointer-events: none; will-change: transform;
+    transition: width .45s var(--ease), height .45s var(--ease), border-color .3s var(--ease);
+  }
+  .cur-ring.is-hover { width: 52px; height: 52px; border-color: rgba(26,26,24,.55); }
+  .cur-ring.is-light { border-color: rgba(255,255,255,.5); }
+  .cur-ring.is-light.is-hover { border-color: rgba(255,255,255,.8); }
+}
+.page-veil {
+  position: fixed; inset: 0; z-index: 99997; background: var(--paper);
+  pointer-events: none; opacity: 1; transition: opacity .42s var(--ease);
+}
+.page-veil.is-in { opacity: 0; }
+.hdr--light { background-color: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+.hdr--light .hdr__nav a,
+.hdr--light .hdr__tools a,
+.hdr--light .hdr__tools button { color: var(--white); transition: color .6s var(--ease); }
+.hdr--light .hdr__brand img { filter: brightness(0) invert(1); transition: filter .6s var(--ease); }
+@keyframes cartPop {
+  0%   { transform: translateY(0);   opacity: 1; }
+  40%  { transform: translateY(-6px); opacity: 0; }
+  41%  { transform: translateY(6px);  opacity: 0; }
+  100% { transform: translateY(0);   opacity: 1; }
+}
+.cart-pop { animation: cartPop .38s var(--ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  .page-veil { transition: none; }
+  .cur-dot, .cur-ring { display: none; }
+  * { cursor: auto !important; }
 }
