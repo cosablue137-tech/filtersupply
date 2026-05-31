@@ -171,6 +171,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .pcard__tag { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-family: var(--sans); font-size: 9px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted); background: var(--white); padding: 4px 12px; white-space: nowrap; }
 .pcard__name { font-family: var(--sans); font-weight: 400; font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
 .pcard__price { margin: 0; }
+.pcard__addform { display: contents; }
 .pcard__add {
   position: absolute; right: 4px; top: calc((100% - 64px) * 0.46);
   width: 30px; height: 30px; border: 1px solid var(--line-2); border-radius: 50%;
@@ -373,8 +374,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .cline__price, .cline__total { text-align: right; font-family: var(--sans); font-weight: 300; font-size: 13px; color: var(--ink-60); font-variant-numeric: tabular-nums; }
 .cline__qtywrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .qstep { display: flex; align-items: center; border: 1px solid var(--line-2); }
-.qstep button { width: 30px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 300; }
-.qstep button:hover { background: var(--ink); color: var(--white); }
+.qstep button, .qstep a { width: 30px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 300; text-decoration: none; color: var(--ink); }
+.qstep button:hover, .qstep a:hover { background: var(--ink); color: var(--white); }
 .qstep input { width: 38px; height: 32px; text-align: center; border: none; border-left: 1px solid var(--line-2); border-right: 1px solid var(--line-2); font-family: var(--sans); font-size: 13px; -moz-appearance: textfield; }
 .qstep input::-webkit-outer-spin-button, .qstep input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .cline__remove { font-family: var(--sans); font-size: 10px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted); border-bottom: 1px solid currentColor; padding-bottom: 2px; }
@@ -653,6 +654,29 @@ body::after {
   .ftr__top { grid-template-columns: 1fr; gap: 32px; }
   .ftr__base { flex-direction: column; }
 }
+
+/* ============================================================
+   RTE — rich text content (page.liquid body, product descriptions)
+   ============================================================ */
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+  font-family: var(--serif); font-weight: 400; line-height: 1.25; margin: 1.4em 0 0.5em;
+}
+.rte h1 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.rte h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+.rte h3 { font-size: clamp(1.2rem, 1.8vw, 1.5rem); }
+.rte p { margin: 0 0 1.2em; }
+.rte ul, .rte ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+.rte li { margin-bottom: 0.4em; }
+.rte a { border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+.rte a:hover { opacity: 0.55; }
+.rte strong { font-weight: 500; }
+.rte em { font-style: italic; }
+.rte blockquote {
+  border-left: 2px solid var(--line-2); margin: 1.4em 0; padding: 0.6em 1.2em;
+  font-family: var(--serif); font-size: 1.1rem; color: var(--ink-60);
+}
+.rte img { max-width: 100%; margin: 1em 0; }
+.rte hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
 
 /* Touch devices — always show add button */
 @media (hover: none), (pointer: coarse) {

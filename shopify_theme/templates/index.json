@@ -5,17 +5,11 @@
     "set":         { "type": "dark-feature" },
     "band":        { "type": "brand-band" },
     "featured":    { "type": "featured-product" },
-    "imagerow":    { "type": "image-row", "blocks": {
-        "b1": { "type": "tile", "settings": { "label": "Single Origin", "sub": "シングルオリジン" } },
-        "b2": { "type": "tile", "settings": { "label": "Blends", "sub": "ブレンド" } },
-        "b3": { "type": "tile", "settings": { "label": "Drip Bags", "sub": "ドリップバッグ" } },
-        "b4": { "type": "tile", "settings": { "label": "Equipment", "sub": "器具" } }
-      }, "block_order": ["b1","b2","b3","b4"] },
-    "seasonal":    { "type": "featured-collection", "settings": { "eyebrow": "この季節のおすすめ", "heading": "Seasonal Selection", "link_label": "" } },
-    "wholesale":   { "type": "wholesale" },
+    "gift":        { "type": "gift-band" },
+    "wholesale":   { "type": "wholesale-band" },
     "blog":        { "type": "blog-posts" },
     "cta":         { "type": "fullbleed-cta" },
     "news":        { "type": "newsletter" }
   },
-  "order": ["hero","bestsellers","set","band","featured","imagerow","seasonal","wholesale","blog","cta","news"]
+  "order": ["hero","bestsellers","set","band","featured","gift","wholesale","blog","cta","news"]
 }

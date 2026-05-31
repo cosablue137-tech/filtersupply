@@ -23,7 +23,7 @@
               <div>
                 <a href="{{ item.url }}"><div class="cline__name">{{ item.product.title }}</div></a>
                 {%- unless item.variant.title contains 'Default' -%}<div class="eyebrow" style="margin-top:6px;">{{ item.variant.title }}</div>{%- endunless -%}
-                {%- if item.product.metafields.custom.notes != blank -%}<div class="eyebrow" style="margin-top:6px;">{{ item.product.metafields.custom.notes }}</div>{%- endunless -%}
+                {%- if item.product.metafields.custom.notes != blank -%}<div class="eyebrow" style="margin-top:6px;">{{ item.product.metafields.custom.notes }}</div>{%- endif -%}
               </div>
             </div>
             <div class="cline__price">{{ item.original_price | money }}</div>

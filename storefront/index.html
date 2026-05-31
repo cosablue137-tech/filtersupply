@@ -30,7 +30,7 @@
 <!-- 1. HERO -->
 <section class="hero">
   <div class="hero__pane hero__pane--dark">
-    <image-slot id="hero-left" shape="rect" fit="cover" placeholder="ドリップの手元 — クロップ"></image-slot>
+    <image-slot id="hero-left" shape="rect" fit="cover" src="https://coffee-otaku.com/wp-content/uploads/2023/06/filter_supply_076-scaled-e1688016185503.jpg" placeholder="ドリップの手元 — クロップ"></image-slot>
     <div class="hero__overlay">
       <p class="eyebrow">Fukuoka · Specialty Coffee</p>
       <h1 class="display">A Cup<br>of Time</h1>
@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class="hero__pane">
-    <image-slot id="hero-right" shape="rect" fit="cover" placeholder="焙煎機のディテール"></image-slot>
+    <image-slot id="hero-right" shape="rect" fit="cover" src="https://coffee-otaku.com/wp-content/uploads/2023/06/filter_supply_018-scaled-e1688016157337.jpg" placeholder="焙煎機のディテール"></image-slot>
   </div>
 </section>
 
@@ -47,7 +47,7 @@
   <div class="sec-head">
     <span class="eyebrow">Best Sellers</span>
   </div>
-  <div class="pgrid" id="bestsellers"></div>
+  <div class="pgrid pgrid--scroll" id="bestsellers"></div>
   <div style="text-align:center;margin-top:clamp(40px,5vw,64px);">
     <a class="btn btn--ghost" href="shop.html">すべての豆を見る</a>
   </div>
@@ -56,43 +56,28 @@
 <!-- 3. SUBSCRIPTION FEATURE -->
 <section class="feature fade" id="subscription">
   <p class="eyebrow">Subscription · 定期便</p>
-  <h2 class="feature__title display">焙きたてを定期で</h2>
+  <h2 class="feature__title display">Freshly Roasted Every Month</h2>
   <a class="ulink feature__sub-link" href="#">定期便のお申し込みはこちら</a>
 </section>
 
 <!-- 4. BRAND BAND -->
 <section class="band fade">
-  <p class="eyebrow">Filter Supply · Since 2019</p>
-  <h2 class="band__name">コーヒーを通して、素晴らしい時間を。</h2>
-  <p>2019年、福岡・高砂。自家焙煎のスペシャルティコーヒーだけに特化した、ハンドドリップ専門店です。一杯が生む時間を、ともに大切にしたいと考えています。</p>
+  <p class="eyebrow">Fukuoka · Since 2019</p>
+  <h2 class="band__name">コーヒーを通して、<br>素晴らしい時間を。</h2>
+  <p>We source each bean for what it can become, and roast it to nothing less.</p>
 </section>
 
-<!-- 5. IMAGE ROW -->
-<div class="irow fade">
-  <div class="irow__cell">
-    <image-slot id="irow-1" shape="rect" fit="cover" placeholder="店舗外観"></image-slot>
-    <span class="irow__label">高砂<small>The Shop</small></span>
-  </div>
-  <div class="irow__cell">
-    <image-slot id="irow-2" shape="rect" fit="cover" placeholder="ハンドドリップの手元"></image-slot>
-    <span class="irow__label">抽出<small>Hand Drip</small></span>
-  </div>
-  <div class="irow__cell">
-    <image-slot id="irow-3" shape="rect" fit="cover" placeholder="コーヒー豆のクローズアップ"></image-slot>
-    <span class="irow__label">豆<small>Single Origin</small></span>
-  </div>
-  <div class="irow__cell">
-    <image-slot id="irow-4" shape="rect" fit="cover" placeholder="瓶入りの商品"></image-slot>
-    <span class="irow__label">瓶<small>Glass Jar</small></span>
-  </div>
-</div>
 
-<!-- 6. SEASONAL -->
-<section class="wrap fade" style="padding:clamp(56px,7vw,100px) var(--gutter);">
-  <div class="sec-head">
-    <span class="eyebrow">Seasonal</span>
+<!-- 6. GIFT BANNER -->
+<section class="wband fade">
+  <div class="wband__in">
+    <p class="eyebrow">Gift</p>
+    <h2 class="wband__title">大切な人へ、<br>コーヒーを贈る。</h2>
+    <a class="btn" href="shop.html">ギフトを見る</a>
   </div>
-  <div class="pgrid" id="seasonal"></div>
+  <div class="wband__media">
+    <image-slot id="gift" shape="rect" fit="cover" src="jar.jpeg" placeholder="ギフト商品"></image-slot>
+  </div>
 </section>
 
 <!-- 7. JOURNAL -->
@@ -103,7 +88,7 @@
   <div class="blog__grid">
     <article class="bpost">
       <div class="bpost__media fade">
-        <image-slot id="blog-1" shape="rect" fit="cover" placeholder="農園の風景 — インドネシア"></image-slot>
+        <image-slot id="blog-1" shape="rect" fit="cover" src="https://coffee-otaku.com/wp-content/uploads/2023/06/filter_supply_097-scaled-e1688021512331.jpg" placeholder="農園の風景 — インドネシア"></image-slot>
       </div>
       <p class="bpost__date">2025.02</p>
       <h3 class="bpost__title">インドネシア・アチェへ。<br>農園視察と買い付けの記録。</h3>
@@ -111,7 +96,7 @@
     </article>
     <article class="bpost">
       <div class="bpost__media fade">
-        <image-slot id="blog-2" shape="rect" fit="cover" placeholder="焙煎室の朝"></image-slot>
+        <image-slot id="blog-2" shape="rect" fit="cover" src="https://news.walkerplus.com/article/1078531/10760617_615.jpg" placeholder="焙煎室の朝"></image-slot>
       </div>
       <p class="bpost__date">2024.11</p>
       <h3 class="bpost__title">FUJI ROYALと向き合う、<br>焙煎の記録。</h3>
@@ -119,7 +104,7 @@
     </article>
     <article class="bpost">
       <div class="bpost__media fade">
-        <image-slot id="blog-3" shape="rect" fit="cover" placeholder="ハンドドリップのセット"></image-slot>
+        <image-slot id="blog-3" shape="rect" fit="cover" src="https://news.walkerplus.com/article/1078531/10760618_615.jpg" placeholder="ハンドドリップのセット"></image-slot>
       </div>
       <p class="bpost__date">2024.08</p>
       <h3 class="bpost__title">丁寧に淹れる、ということ。<br>ハンドドリップの基本。</h3>
@@ -136,13 +121,13 @@
     <a class="ulink" href="#">卸売のお問い合わせはこちら</a>
   </div>
   <div class="wband__media">
-    <image-slot id="wholesale" shape="rect" fit="cover" placeholder="業務用 — 卸売イメージ"></image-slot>
+    <image-slot id="wholesale" shape="rect" fit="cover" src="https://devi-log.net/gourmet/wp-content/uploads/2019/07/P1530866_640_6.jpg" placeholder="業務用 — 卸売イメージ"></image-slot>
   </div>
 </section>
 
 <!-- 9. FULL-BLEED CTA -->
 <section class="fbcta fade">
-  <image-slot id="fbcta" shape="rect" fit="cover" placeholder="フルブリード — ドリップの俯瞰"></image-slot>
+  <image-slot id="fbcta" shape="rect" fit="cover" src="https://coffee-otaku.com/wp-content/uploads/2023/06/filter_supply_001-scaled.jpg" placeholder="フルブリード — ドリップの俯瞰"></image-slot>
   <div class="fbcta__in">
     <p class="eyebrow" style="color:rgba(255,255,255,.75)">Light to Dark</p>
     <h2 class="display">Find Your Cup</h2>
@@ -197,5 +182,6 @@
 <script src="image-slot.js"></script>
 <script src="products.js"></script>
 <script src="store.js"></script>
+<script src="ui.js"></script>
 </body>
 </html>

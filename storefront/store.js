@@ -32,15 +32,16 @@ window.FS_FMT = function (n) { return "¥" + n.toLocaleString("ja-JP"); };
   function cardHTML(p) {
     return (
       '<article class="pcard">' +
-        '<div class="pcard__media">' +
-          (p.tag ? '<span class="pcard__tag">' + p.tag + '</span>' : '') +
-          '<image-slot id="ps-' + p.id + '" shape="rect" fit="contain" placeholder="' + p.kanji + ' — ' + p.jp + '"></image-slot>' +
-        '</div>' +
+        '<a href="product.html?id=' + p.id + '" class="pcard__link" aria-label="' + p.jp + 'の詳細">' +
+          '<div class="pcard__media">' +
+            (p.tag ? '<span class="pcard__tag">' + p.tag + '</span>' : '') +
+            '<image-slot id="ps-' + p.id + '" shape="rect" fit="contain"' + (p.img ? ' src="' + p.img + '"' : '') + ' placeholder="' + p.kanji + ' — ' + p.jp + '"></image-slot>' +
+          '</div>' +
+        '</a>' +
         '<button class="pcard__add" data-add="' + p.jp + '" aria-label="カートに追加">+</button>' +
-        '<h3 class="pcard__name">' + p.jp + '</h3>' +
+        '<h3 class="pcard__name"><a href="product.html?id=' + p.id + '">' + p.jp + '</a></h3>' +
         '<p class="eyebrow" style="color:var(--muted);font-size:9px;margin:4px 0 6px;">' + p.en + '</p>' +
         '<p class="pcard__price">' + window.FS_FMT(p.price) + '</p>' +
-        (p.notes ? '<p class="eyebrow" style="color:var(--muted);font-size:9px;margin:6px 0 0;line-height:1.6;max-width:24ch;margin-left:auto;margin-right:auto;">' + p.notes + '</p>' : '') +
       '</article>'
     );
   }

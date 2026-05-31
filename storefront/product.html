@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Product — Filter Supply</title>
+<link rel="stylesheet" href="beyond.css" />
+</head>
+<body>
+
+<div class="anno">全国送料無料 ¥5,000以上 — Free shipping over ¥5,000</div>
+
+<header class="hdr">
+  <nav class="hdr__nav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#journal">Journal</a>
+  </nav>
+  <a class="hdr__brand" href="index.html" aria-label="Filter Supply"><img src="logo-ink.png" alt="Filter Supply" /></a>
+  <div class="hdr__tools">
+    <button aria-label="検索"><svg class="icon" width="17" height="17" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="21" y2="21"/></svg></button>
+    <a href="cart.html"><span class="lbl">Cart</span> (<span data-cart-count>0</span>)</a>
+    <button class="hdr__burger" aria-label="メニュー"><svg class="icon" width="20" height="20" viewBox="0 0 24 24"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</header>
+
+<main>
+  <div class="pdpage" id="pdpage">
+    <div class="pdpage__grid">
+      <div class="pdpage__media">
+        <img id="pd-img" src="jar.jpeg" alt="" />
+      </div>
+      <div class="pdpage__info">
+        <p class="pdpage__tag" id="pd-tag"></p>
+        <h1 class="pdpage__name" id="pd-name"></h1>
+        <p class="pdpage__sub" id="pd-sub"></p>
+        <p class="pdpage__price" id="pd-price"></p>
+        <div class="pdpage__meta" id="pd-meta"></div>
+        <p class="pdpage__notes" id="pd-notes"></p>
+        <div class="pdpage__actions">
+          <button class="btn" id="pd-add">カートに追加</button>
+          <a class="btn btn--ghost" href="shop.html">← すべての豆を見る</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECOMMENDED -->
+  <section class="reco fade">
+    <div class="reco__head sec-head">
+      <span class="eyebrow">You May Also Like</span>
+    </div>
+    <div class="pgrid pgrid--scroll" id="reco-grid"></div>
+  </section>
+</main>
+
+<footer class="ftr">
+  <div class="ftr__top">
+    <div>
+      <h3 class="ftr__head">About the Store</h3>
+      <p>日本・福岡から、自家焙煎のスペシャルティコーヒーをお届けする、ハンドドリップ専門店です。</p>
+      <div class="ftr__social">
+        <a href="#" aria-label="Instagram"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="X"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M4 4 L20 20 M20 4 L4 20"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h3 class="ftr__head">Quick Links</h3>
+      <ul>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Wholesale</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="ftr__head">Mailing List</h3>
+      <p>新着・限定の入荷情報をお届けします。</p>
+      <form class="ftr__news" onsubmit="this.querySelector('button').textContent='OK ✓';return false;">
+        <input type="email" placeholder="メールアドレス" />
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="ftr__base">
+    <span>© 2026 Filter Supply · 福岡市</span>
+    <span>Powered by Coffee</span>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="products.js"></script>
+<script src="store.js"></script>
+<script src="ui.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var id = new URLSearchParams(location.search).get("id");
+  var products = window.FS_PRODUCTS || [];
+  var p = products.find(function (x) { return x.id === id; }) || products[0];
+
+  document.title = p.jp + " — Filter Supply";
+  document.getElementById("pd-tag").textContent = p.originEn + " · " + p.roastEn;
+  document.getElementById("pd-name").textContent = p.jp;
+  document.getElementById("pd-sub").textContent = p.en;
+  document.getElementById("pd-price").textContent = window.FS_FMT(p.price) + " / " + p.weight;
+  if (p.img) document.getElementById("pd-img").src = p.img;
+
+  document.getElementById("pd-meta").innerHTML =
+    row("焙煎度", p.roast) +
+    row("精製", p.process) +
+    row("産地", p.origin) +
+    row("内容量", p.weight);
+
+  if (p.notes) document.getElementById("pd-notes").textContent = p.notes;
+
+  document.getElementById("pd-add").addEventListener("click", function () {
+    window.FS.addToCart(p.jp);
+  });
+
+  // Recommendations: same category first, then others, exclude current
+  var reco = products
+    .filter(function (x) { return x.id !== p.id; })
+    .sort(function (a, b) {
+      return (b.cat === p.cat ? 1 : 0) - (a.cat === p.cat ? 1 : 0);
+    })
+    .slice(0, 5);
+
+  var grid = document.getElementById("reco-grid");
+  grid.innerHTML = reco.map(function (r) {
+    return '<article class="pcard">' +
+      '<a href="product.html?id=' + r.id + '">' +
+        '<div class="pcard__media">' +
+          '<image-slot id="rp-' + r.id + '" shape="rect" fit="contain"' + (r.img ? ' src="' + r.img + '"' : '') + ' placeholder="' + r.kanji + '"></image-slot>' +
+        '</div>' +
+      '</a>' +
+      '<h3 class="pcard__name"><a href="product.html?id=' + r.id + '">' + r.jp + '</a></h3>' +
+      '<p class="eyebrow" style="color:var(--muted);font-size:9px;margin:4px 0 6px;">' + r.en + '</p>' +
+      '<p class="pcard__price">' + window.FS_FMT(r.price) + '</p>' +
+    '</article>';
+  }).join("");
+});
+
+function row(label, val) {
+  return '<div class="pdpage__meta-row"><span>' + label + '</span><span>' + val + '</span></div>';
+}
+</script>
+</body>
+</html>
