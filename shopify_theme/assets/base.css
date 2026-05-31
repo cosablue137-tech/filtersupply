@@ -48,7 +48,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   line-break: strict;       /* 禁則処理 */
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -353,7 +353,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .chero h1 { position: relative; font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.4rem); letter-spacing: .04em; color: var(--white); margin: 0; }
 .filterbar { display: flex; align-items: center; justify-content: space-between; padding: 22px var(--gutter); border-bottom: 1px solid var(--line); }
 .filterbar__left { display: flex; gap: 28px; }
-.filterbar__left button { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.filterbar__left button { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .filterbar__view { display: flex; gap: 12px; color: var(--muted); }
 
 /* ============================================================
@@ -408,7 +408,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .band__name, .news__title, .bpost__title, .chero h1,
 .cart__title, .feature__title, .fprod__info h2, .split__text h2 {
   text-wrap: balance;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .display { text-wrap: balance; overflow-wrap: anywhere; }
 .ftr p, .ftr li { line-break: strict; }
@@ -590,14 +590,57 @@ body::after {
   .split__media { min-height: 320px; order: -1; }
   .ftr__top { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============================================================
+   MOBILE NAV (slide-in)
+   ============================================================ */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,24,.32);
+  z-index: 55;
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+}
+.nav-overlay.is-open { opacity: 1; }
+
 @media (max-width: 640px) {
   .hdr { grid-template-columns: auto 1fr auto; }
-  .hdr__nav { display: none; }
   .hdr__burger { display: flex; }
   .hdr__tools a span.lbl { display: none; }
-  .hero { grid-template-columns: 1fr; }
+
+  .hdr__nav {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: 72vw; max-width: 280px;
+    background: var(--paper);
+    border-left: 1px solid var(--line);
+    flex-direction: column;
+    gap: 0;
+    padding: 72px 0 40px;
+    z-index: 60;
+    transform: translateX(100%);
+    transition: transform .45s var(--ease);
+    display: flex;
+  }
+  .hdr__nav.is-open { transform: translateX(0); }
+  .hdr__nav a {
+    padding: 18px var(--gutter);
+    font-size: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr__nav a:last-child { border-bottom: none; }
+  .hdr__nav a.is-active, .hdr__nav a:hover { color: var(--ink); opacity: .55; }
+  .nav-overlay { display: block; pointer-events: none; }
+  .nav-overlay.is-open { pointer-events: auto; }
+
+  .hero { grid-template-columns: 1fr; min-height: clamp(340px, 60vh, 520px); }
   .hero__pane:last-child { display: none; }
-  .pgrid, .blog__grid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
+
+  .pgrid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
+  .blog__grid { grid-template-columns: 1fr; gap: 32px; }
+
   .cart__head { display: none; }
   .cline { grid-template-columns: 1fr auto; grid-template-areas: "prod total" "qty qty"; gap: 14px; }
   .cline__prod { grid-area: prod; }
@@ -606,6 +649,16 @@ body::after {
   .cline__qtywrap { grid-area: qty; align-items: flex-start; }
   .cart__foot { grid-template-columns: 1fr; }
   .cart__sum, .cart__actions { text-align: left; justify-content: flex-start; }
+
   .ftr__top { grid-template-columns: 1fr; gap: 32px; }
   .ftr__base { flex-direction: column; }
+}
+
+/* Touch devices — always show add button */
+@media (hover: none), (pointer: coarse) {
+  .pcard__add { opacity: 1; transform: scale(1); pointer-events: auto; }
+  .pcard__media image-slot, .pcard__media img { transition: opacity .4s var(--ease); }
+  .pcard:hover .pcard__media image-slot, .pcard:hover .pcard__media img { transform: none; }
+  .irow__cell image-slot, .irow__cell img { transition: none; }
+  .bpost__media image-slot, .bpost__media img { transition: none; }
 }

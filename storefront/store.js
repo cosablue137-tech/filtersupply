@@ -73,6 +73,28 @@ window.FS_FMT = function (n) { return "¥" + n.toLocaleString("ja-JP"); };
     renderGrid("seasonal", P.slice(3, 9));
     renderGrid("shopgrid", P);
 
+    /* Mobile nav */
+    var burger = document.querySelector(".hdr__burger");
+    var nav    = document.querySelector(".hdr__nav");
+    if (burger && nav) {
+      var overlay = document.createElement("div");
+      overlay.className = "nav-overlay";
+      document.body.appendChild(overlay);
+      function toggleMenu(open) {
+        nav.classList.toggle("is-open", open);
+        overlay.classList.toggle("is-open", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        burger.setAttribute("aria-expanded", String(open));
+      }
+      burger.addEventListener("click", function () {
+        toggleMenu(!nav.classList.contains("is-open"));
+      });
+      overlay.addEventListener("click", function () { toggleMenu(false); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") toggleMenu(false);
+      });
+    }
+
     /* Header scroll shadow */
     var hdr = document.querySelector(".hdr");
     if (hdr) {

@@ -70,6 +70,32 @@
     document.querySelectorAll(".fade").forEach(function (el) { io.observe(el); });
   }
 
+  function initMobileNav() {
+    var burger = document.querySelector(".hdr__burger");
+    var nav    = document.querySelector(".hdr__nav");
+    if (!burger || !nav) return;
+    var overlay = document.getElementById("nav-overlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "nav-overlay";
+      overlay.className = "nav-overlay";
+      document.body.appendChild(overlay);
+    }
+    function toggleMenu(open) {
+      nav.classList.toggle("is-open", open);
+      overlay.classList.toggle("is-open", open);
+      document.body.style.overflow = open ? "hidden" : "";
+      burger.setAttribute("aria-expanded", String(open));
+    }
+    burger.addEventListener("click", function () {
+      toggleMenu(!nav.classList.contains("is-open"));
+    });
+    overlay.addEventListener("click", function () { toggleMenu(false); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") toggleMenu(false);
+    });
+  }
+
   function initScrollUI() {
     var hdr = document.querySelector(".hdr");
     if (hdr) {
@@ -88,6 +114,6 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initScrollUI(); });
+  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); });
   document.addEventListener("shopify:section:load", function () { bindSteppers(); bindVariants(); armFades(); });
 })();
