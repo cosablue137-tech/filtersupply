@@ -53,6 +53,10 @@
             <a class="ulink" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
             <button class="btn" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
           </div>
+          <p class="secure-note">{% render 'icon', name: 'lock', size: 12 %} {{ 'cart.secure' | t | default: 'SSL暗号化による安全なお支払い' }}</p>
+          {%- if shop.enabled_payment_types.size > 0 -%}
+            <div class="secure-pay">{%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag: class: 'icon-pay' }}{%- endfor -%}</div>
+          {%- endif -%}
         </div>
       </div>
     </form>

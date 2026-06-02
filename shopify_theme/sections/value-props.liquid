@@ -1,0 +1,49 @@
+{%- comment -%} Filter Supply — value props strip (icons + short text) {%- endcomment -%}
+<section class="vprops wrap fade" style="padding:clamp(28px,4vw,48px) 0;">
+  <div class="vprops__row">
+    {%- for block in section.blocks -%}
+      <div class="vprop" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != 'none' -%}<span class="vprop__icon">{% render 'icon', name: block.settings.icon, size: 22 %}</span>{%- endif -%}
+        <div class="vprop__txt">
+          {%- if block.settings.title != blank -%}<span class="vprop__title">{{ block.settings.title }}</span>{%- endif -%}
+          {%- if block.settings.text != blank -%}<span class="vprop__sub">{{ block.settings.text }}</span>{%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "バリュープロップ帯",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "項目",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "アイコン", "default": "truck",
+          "options": [
+            { "value": "truck", "label": "配送" },
+            { "value": "leaf", "label": "焙煎・品質" },
+            { "value": "pin", "label": "拠点" },
+            { "value": "lock", "label": "安全" },
+            { "value": "none", "label": "なし" }
+          ] },
+        { "type": "text", "id": "title", "label": "見出し", "default": "送料無料" },
+        { "type": "text", "id": "text", "label": "補足", "default": "5,000円以上のご購入で" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "バリュープロップ帯",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "truck", "title": "送料無料", "text": "5,000円以上のご購入で" } },
+        { "type": "item", "settings": { "icon": "leaf", "title": "自家焙煎", "text": "ご注文後に焙煎してお届け" } },
+        { "type": "item", "settings": { "icon": "pin", "title": "福岡から発送", "text": "丁寧に梱包してお送りします" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

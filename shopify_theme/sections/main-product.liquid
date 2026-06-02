@@ -36,6 +36,7 @@
             sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 40vw"
             alt="{{ product.title | escape }}"
             loading="eager"
+            data-zoom="{{ product.featured_image | image_url: width: 1800 }}"
             width="{{ product.featured_image.width }}"
             height="{{ product.featured_image.height }}">
         {%- else -%}
@@ -49,6 +50,9 @@
       <h2>{{ product.title }}</h2>
       {%- if m.notes != blank -%}<p class="eyebrow" style="margin:-6px 0 14px;color:var(--muted);">{{ m.notes }}</p>{%- endif -%}
       <p class="fprod__price" data-price>{{ v.price | money }}</p>
+      {%- if v.inventory_management != blank and v.inventory_policy == 'deny' and v.inventory_quantity > 0 and v.inventory_quantity <= 5 -%}
+        <p class="fprod__stock" data-low-stock>{% render 'icon', name: 'leaf', size: 12 %} 残りわずか（あと{{ v.inventory_quantity }}点）</p>
+      {%- endif -%}
 
       {% form 'product', product, data-product-form: 'true' %}
         {%- unless product.has_only_default_variant -%}
@@ -84,6 +88,11 @@
         </div>
       {% endform %}
 
+      <p class="secure-note">{% render 'icon', name: 'lock', size: 12 %} {{ 'product.secure' | t | default: 'SSL暗号化による安全なお支払い' }}</p>
+      {%- if shop.enabled_payment_types.size > 0 -%}
+        <div class="secure-pay">{%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag: class: 'icon-pay' }}{%- endfor -%}</div>
+      {%- endif -%}
+
       <div class="fprod__acc">
         {%- if product.description != blank -%}
           <details class="acc-item" open><summary>{{ 'product.description' | t }} <span class="pm">+</span></summary><div class="acc-item__body">{{ product.description }}</div></details>
@@ -117,6 +126,32 @@
     ]
   </script>
 </section>
+
+{%- comment -%} 関連商品（同じコレクションから） {%- endcomment -%}
+{%- assign rel = product.collections.first -%}
+{%- if rel != blank and rel.products.size > 1 -%}
+  <section class="wrap fade" style="padding:0 0 clamp(56px,7vw,100px);">
+    <div class="sec-head"><span class="eyebrow">{{ 'product.related' | t | default: 'こちらもおすすめ' }}</span></div>
+    <div class="pgrid pgrid--scroll">
+      {%- assign shown = 0 -%}
+      {%- for p in rel.products -%}
+        {%- if p.id != product.id and shown < 4 -%}
+          {% render 'product-card', product: p %}
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{%- comment -%} モバイル固定購入バー {%- endcomment -%}
+<div class="sticky-buy" data-sticky-buy aria-hidden="true">
+  <div class="sticky-buy__info">
+    <span class="sticky-buy__name">{{ product.title }}</span>
+    <span class="sticky-buy__price" data-price-mirror>{{ v.price | money }}</span>
+  </div>
+  <button class="btn" type="button" data-sticky-add {% unless product.available %}disabled{% endunless %}>{{ 'product.add_to_cart' | t }}</button>
+</div>
 
 <!-- 構造化データ：商品（価格・在庫・パンくず） -->
 <script type="application/ld+json">

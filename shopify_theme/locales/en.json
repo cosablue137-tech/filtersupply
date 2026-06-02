@@ -1,14 +1,17 @@
 {
-  "general": { "page": "Page", "previous": "Previous", "next": "Next", "search": "Search", "skip_to_content": "Skip to content" },
+  "general": { "page": "Page", "previous": "Previous", "next": "Next", "search": "Search", "skip_to_content": "Skip to content", "payment_methods": "Payment methods" },
   "newsletter": { "placeholder": "Email address", "subscribe": "Subscribe", "join": "Join", "success": "Thank you for subscribing." },
   "product": {
     "add_to_cart": "Add to Cart",
     "buy_now": "Buy It Now",
     "sold_out": "Sold Out",
+    "view": "View Product",
     "back": "Shop",
     "description": "Description",
     "details": "Details",
-    "brewing": "Brewing"
+    "brewing": "Brewing",
+    "secure": "Secure SSL-encrypted payment",
+    "related": "You may also like"
   },
   "collection": { "empty": "No products." },
   "cart": {
@@ -24,7 +27,8 @@
     "remove": "Remove",
     "note": "Leave a note with your order",
     "note_ph": "Gift wrap requests, delivery notes, etc.",
-    "taxes_note": "Taxes & shipping calculated at checkout"
+    "taxes_note": "Taxes & shipping calculated at checkout",
+    "secure": "Secure SSL-encrypted payment"
   },
   "search": { "title": "Search", "placeholder": "Enter a keyword", "no_results": "No results found.", "results_for": "Results for \u201c{{ terms }}\u201d" },
   "contact": {

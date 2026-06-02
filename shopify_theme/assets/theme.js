@@ -49,6 +49,8 @@
       idInput.value = match.id;
       // 価格はサーバ整形済み（通貨記号・桁区切りはストア設定に従う）
       if (priceEl && match.price) priceEl.textContent = match.price;
+      var mirror = $("[data-price-mirror]"); if (mirror && match.price) mirror.textContent = match.price;
+      var sAdd = $("[data-sticky-add]"); if (sAdd) sAdd.disabled = !match.available;
       // 在庫状態をボタンへ反映
       if (addBtn) {
         addBtn.disabled = !match.available;
@@ -142,6 +144,52 @@
     }, { threshold: 0 }).observe(sentinel);
   }
 
+  /* ---- product image lightbox (zoom) ---- */
+  function initZoom() {
+    var imgs = $all("[data-zoom]");
+    if (!imgs.length) return;
+    var box = null;
+    function open(src, alt) {
+      if (!box) {
+        box = document.createElement("div");
+        box.className = "lightbox";
+        box.innerHTML = '<button class="lightbox__close" type="button" aria-label="閉じる">&times;</button><img alt="">';
+        document.body.appendChild(box);
+        box.addEventListener("click", function (e) {
+          if (e.target === box || e.target.classList.contains("lightbox__close")) close();
+        });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+      }
+      box.querySelector("img").src = src;
+      box.querySelector("img").alt = alt || "";
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(function () { box.classList.add("is-open"); });
+    }
+    function close() { if (box) { box.classList.remove("is-open"); document.body.style.overflow = ""; } }
+    imgs.forEach(function (img) {
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { open(img.getAttribute("data-zoom"), img.alt); });
+    });
+  }
+
+  /* ---- sticky add-to-cart (mobile) ---- */
+  function initStickyBuy() {
+    var bar = $("[data-sticky-buy]");
+    var form = $("[data-product-form]");
+    if (!bar || !form) return;
+    var realAdd = form.querySelector("[data-add-to-cart]");
+    var anchor = form.querySelector(".fprod__buy") || realAdd;
+    if (!anchor) return;
+    bar.querySelector("[data-sticky-add]").addEventListener("click", function () {
+      if (realAdd) realAdd.click();
+    });
+    if (!("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (entries) {
+      // 本来の購入ボタンが画面外のときだけ固定バーを出す
+      bar.classList.toggle("is-shown", !entries[0].isIntersecting);
+    }, { rootMargin: "0px 0px -10% 0px" }).observe(anchor);
+  }
+
   /* ---- cart count morph ---- */
   function initCartMorph() {
     document.addEventListener("click", function (e) {
@@ -156,6 +204,6 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCartMorph(); });
+  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCartMorph(); initZoom(); initStickyBuy(); });
   document.addEventListener("shopify:section:load", function () { bindSteppers(); bindVariants(); armFades(); });
 })();

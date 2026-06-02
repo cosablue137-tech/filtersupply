@@ -1,14 +1,17 @@
 {
-  "general": { "page": "ページ", "previous": "前へ", "next": "次へ", "search": "検索", "skip_to_content": "メインコンテンツへ移動" },
+  "general": { "page": "ページ", "previous": "前へ", "next": "次へ", "search": "検索", "skip_to_content": "メインコンテンツへ移動", "payment_methods": "ご利用いただける決済方法" },
   "newsletter": { "placeholder": "メールアドレス", "subscribe": "登録する", "join": "登録", "success": "ご登録ありがとうございます。" },
   "product": {
     "add_to_cart": "カートに入れる",
     "buy_now": "今すぐ購入",
     "sold_out": "売り切れ",
+    "view": "詳細を見る",
     "back": "Shop",
     "description": "Description",
     "details": "Details",
-    "brewing": "Brewing"
+    "brewing": "Brewing",
+    "secure": "SSL暗号化による安全なお支払い",
+    "related": "こちらもおすすめ"
   },
   "collection": { "empty": "商品がありません。" },
   "cart": {
@@ -24,7 +27,8 @@
     "remove": "Remove",
     "note": "Leave a note with your order",
     "note_ph": "ギフト包装のご希望、配送のご要望など",
-    "taxes_note": "税・送料はレジで計算されます — Taxes & shipping calculated at checkout"
+    "taxes_note": "税・送料はレジで計算されます — Taxes & shipping calculated at checkout",
+    "secure": "SSL暗号化による安全なお支払い"
   },
   "search": { "title": "検索", "placeholder": "キーワードを入力", "no_results": "該当する商品が見つかりませんでした。", "results_for": "「{{ terms }}」の検索結果" },
   "contact": {
