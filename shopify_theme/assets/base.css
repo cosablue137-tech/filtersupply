@@ -998,3 +998,13 @@ body::after {
 .to-top svg { width: 18px; height: 18px; stroke: #fff; }
 @media (max-width: 640px) { .to-top { bottom: 84px; } } /* avoid sticky buy bar */
 @media (prefers-reduced-motion: reduce) { .to-top { transition: none; } }
+
+/* Product description — full-width block below the product */
+.prod-desc {
+  max-width: 720px; margin: clamp(40px,6vw,80px) auto 0;
+  padding-top: clamp(32px,4vw,56px); border-top: 1px solid var(--line);
+  color: var(--ink-60); font-size: 15px; line-height: 1.95;
+}
+.prod-desc > :first-child { margin-top: 0; }
+.prod-desc > :last-child { margin-bottom: 0; }
+.prod-desc h2, .prod-desc h3 { font-family: var(--serif); font-weight: 400; color: var(--ink); line-height: 1.3; }

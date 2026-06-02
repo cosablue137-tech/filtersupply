@@ -94,9 +94,6 @@
       {%- endif -%}
 
       <div class="fprod__acc">
-        {%- if product.description != blank -%}
-          <details class="acc-item" open><summary>{{ 'product.description' | t }} <span class="pm">+</span></summary><div class="acc-item__body">{{ product.description }}</div></details>
-        {%- endif -%}
         {%- if m.origin != blank or m.process != blank or m.roast != blank or m.weight != blank -%}
           <details class="acc-item"><summary>{{ 'product.details' | t }} <span class="pm">+</span></summary><div class="acc-item__body">
             {%- if m.origin != blank -%}原産地：{{ m.origin }}<br>{%- endif -%}
@@ -111,6 +108,10 @@
       </div>
     </div>
   </div>
+
+  {%- if product.description != blank -%}
+    <div class="prod-desc rte fade">{{ product.description }}</div>
+  {%- endif -%}
 
   <script type="application/json" id="fs-variants-json">
     [
