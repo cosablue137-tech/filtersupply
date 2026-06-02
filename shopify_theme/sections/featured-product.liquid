@@ -35,7 +35,8 @@
           </div>
         {% endform %}
       {%- endif -%}
-      {%- if product.description != blank -%}
+      {%- comment -%} ホーム（index）では説明を非表示。他ページに置いた場合のみ表示 {%- endcomment -%}
+      {%- if product.description != blank and template.name != 'index' -%}
         <div class="fprod__acc">
           <details class="acc-item" open><summary>{{ 'product.description' | t }} <span class="pm">+</span></summary><div class="acc-item__body">{{ product.description }}</div></details>
         </div>
