@@ -31,10 +31,13 @@
     var variants = JSON.parse(tag.textContent);
     var idInput = form.querySelector("input[name=id]");
     var priceEl = $("[data-price]");
+    var addBtn = form.querySelector("[data-add-to-cart]");
+    var buyBtn = form.querySelector("[name=checkout]");
 
     function active(group) { var a = group.querySelector(".sf-chip.is-active"); return a ? a.getAttribute("data-value") : null; }
     function paint(chip, on) {
       chip.classList.toggle("is-active", on);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
       chip.style.background = on ? "var(--ink)" : "transparent";
       chip.style.color = on ? "#fff" : "var(--ink)";
       chip.style.borderColor = on ? "var(--ink)" : "var(--line-2)";
@@ -44,8 +47,19 @@
       var match = variants.find(function (v) { return v.options.every(function (o, i) { return o === opts[i]; }); }) || variants[0];
       if (!match) return;
       idInput.value = match.id;
-      if (priceEl && match.price != null) {
-        priceEl.textContent = "¥" + Math.round(match.price / 100).toLocaleString("ja-JP");
+      // 価格はサーバ整形済み（通貨記号・桁区切りはストア設定に従う）
+      if (priceEl && match.price) priceEl.textContent = match.price;
+      // 在庫状態をボタンへ反映
+      if (addBtn) {
+        addBtn.disabled = !match.available;
+        addBtn.textContent = match.available
+          ? (addBtn.getAttribute("data-label-add") || addBtn.textContent)
+          : (addBtn.getAttribute("data-label-sold") || addBtn.textContent);
+      }
+      if (buyBtn) buyBtn.style.display = match.available ? "" : "none";
+      // URL に ?variant= を反映（リロード・共有で選択を保持）
+      if (match.url && window.history && history.replaceState) {
+        history.replaceState({}, "", match.url);
       }
     }
     $all("[data-option-index]", form).forEach(function (group) {
@@ -114,55 +128,6 @@
     }
   }
 
-  /* ---- custom cursor ---- */
-  function initCursor() {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    var dot = document.createElement("div"); dot.className = "cur-dot";
-    var ring = document.createElement("div"); ring.className = "cur-ring";
-    document.body.appendChild(dot); document.body.appendChild(ring);
-    var mx = -100, my = -100, rx = -100, ry = -100;
-    document.addEventListener("mousemove", function (e) {
-      mx = e.clientX; my = e.clientY;
-      dot.style.transform = "translate(" + (mx - 3) + "px," + (my - 3) + "px)";
-      var el = document.elementFromPoint(mx, my);
-      var dark = el && el.closest(".hero__pane--dark, .feature, .fbcta");
-      dot.classList.toggle("is-light", !!dark);
-      ring.classList.toggle("is-light", !!dark);
-    });
-    document.addEventListener("mouseover", function (e) {
-      if (e.target.closest("a, button")) ring.classList.add("is-hover");
-    });
-    document.addEventListener("mouseout", function (e) {
-      if (e.target.closest("a, button")) ring.classList.remove("is-hover");
-    });
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    (function tick() {
-      rx = lerp(rx, mx, 0.10); ry = lerp(ry, my, 0.10);
-      ring.style.transform = "translate(" + (rx - 16) + "px," + (ry - 16) + "px)";
-      requestAnimationFrame(tick);
-    })();
-  }
-
-  /* ---- page fade transitions ---- */
-  function initTransitions() {
-    var veil = document.createElement("div"); veil.className = "page-veil";
-    document.body.appendChild(veil);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { veil.classList.add("is-in"); });
-    });
-    document.addEventListener("click", function (e) {
-      var a = e.target.closest("a[href]");
-      if (!a) return;
-      var href = a.getAttribute("href");
-      if (!href || href.charAt(0) === "#" || a.target === "_blank" ||
-          href.startsWith("mailto") || href.startsWith("tel") ||
-          href.startsWith("javascript")) return;
-      e.preventDefault();
-      veil.classList.remove("is-in");
-      setTimeout(function () { location.href = href; }, 420);
-    });
-  }
-
   /* ---- smart header (white over dark hero) ---- */
   function initSmartHeader() {
     var hdr = document.querySelector(".hdr");
@@ -179,23 +144,18 @@
 
   /* ---- cart count morph ---- */
   function initCartMorph() {
-    var interval = setInterval(function () {
-      var cartForm = document.querySelector("form[action*='/cart']");
-      if (!cartForm && !document.querySelector("[data-cart-count]")) return;
-      clearInterval(interval);
-      document.addEventListener("click", function (e) {
-        if (!e.target.closest("[type=submit]")) return;
-        setTimeout(function () {
-          document.querySelectorAll("[data-cart-count]").forEach(function (el) {
-            el.classList.remove("cart-pop");
-            void el.offsetWidth;
-            el.classList.add("cart-pop");
-          });
-        }, 300);
-      });
-    }, 200);
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest("[type=submit]")) return;
+      setTimeout(function () {
+        $all("[data-cart-count]").forEach(function (el) {
+          el.classList.remove("cart-pop");
+          void el.offsetWidth;
+          el.classList.add("cart-pop");
+        });
+      }, 300);
+    });
   }
 
-  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCursor(); initTransitions(); initSmartHeader(); initCartMorph(); });
+  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initSmartHeader(); initCartMorph(); });
   document.addEventListener("shopify:section:load", function () { bindSteppers(); bindVariants(); armFades(); });
 })();

@@ -1,5 +1,5 @@
 {%- comment -%} Filter Supply — cart page (Beyond style table) {%- endcomment -%}
-<main class="cart">
+<div class="cart">
   <h1 class="cart__title">{{ 'cart.title_full' | t }}</h1>
 
   {%- if cart.item_count == 0 -%}
@@ -17,7 +17,7 @@
           <div class="cline">
             <div class="cline__prod">
               <a class="cline__thumb" href="{{ item.url }}">
-                {%- if item.image -%}<img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}">
+                {%- if item.image -%}<img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}" loading="lazy" width="{{ item.image.width }}" height="{{ item.image.height }}">
                 {%- else -%}<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:var(--jp);color:#cfcabf;">{{ item.product.metafields.custom.kanji | default: '豆' }}</span>{%- endif -%}
               </a>
               <div>
@@ -47,7 +47,7 @@
         </div>
         <div class="cart__sum">
           <span class="label label--mute">{{ 'cart.total' | t }}</span>
-          <div class="cart__total">{{ cart.total_price | money }} {{ cart.currency.iso_code }}</div>
+          <div class="cart__total">{{ cart.total_price | money_with_currency }}</div>
           <p class="cart__taxes">{{ 'cart.taxes_note' | t }}</p>
           <div class="cart__actions">
             <a class="ulink" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
@@ -57,4 +57,4 @@
       </div>
     </form>
   {%- endif -%}
-</main>
+</div>

@@ -13,7 +13,7 @@
     {%- if section.settings.btn_label != blank -%}<a class="ulink" style="color:#fff;margin-top:26px;" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
   </div>
   <div class="split__media">
-    {%- if section.settings.image != blank -%}<img src="{{ section.settings.image | image_url: width: 1200 }}" alt="">{%- endif -%}
+    {%- if section.settings.image != blank -%}<img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">{%- endif -%}
   </div>
 </section>
 

@@ -11,14 +11,14 @@
       <div class="fprod__thumbs">
         {%- if product != blank -%}
           {%- for image in product.images limit: 3 -%}
-            <div class="fprod__thumb"><img src="{{ image | image_url: width: 240 }}" alt=""></div>
+            <div class="fprod__thumb"><img src="{{ image | image_url: width: 240 }}" alt="" loading="lazy" width="{{ image.width }}" height="{{ image.height }}"></div>
           {%- endfor -%}
         {%- else -%}
           <div class="fprod__thumb"></div><div class="fprod__thumb"></div><div class="fprod__thumb"></div>
         {%- endif -%}
       </div>
       <div class="fprod__main">
-        {%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}">{%- endif -%}
+        {%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">{%- endif -%}
       </div>
     </div>
 

@@ -3,12 +3,15 @@
     "name": "theme_info",
     "theme_name": "Filter Supply",
     "theme_version": "2.0.0",
-    "theme_author": "Filter Supply"
+    "theme_author": "Filter Supply",
+    "theme_support_url": "https://filter-supply.jp",
+    "theme_documentation_url": "https://filter-supply.jp"
   },
   {
     "name": "ブランド",
     "settings": [
       { "type": "image_picker", "id": "favicon", "label": "ファビコン" },
+      { "type": "image_picker", "id": "share_image", "label": "SNSシェア画像（OG / 1200×630推奨）", "info": "トップページや一般ページをSNSでシェアした際の画像・ロゴに使われます。" },
       { "type": "paragraph", "content": "配色・タイポグラフィはブランド規定により固定です（白地・墨色・クリーム／チャコール、Cormorant + Jost）。" }
     ]
   }

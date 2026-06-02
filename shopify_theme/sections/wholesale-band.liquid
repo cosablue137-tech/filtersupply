@@ -8,7 +8,7 @@
     {%- endif -%}
   </div>
   {%- if section.settings.image != blank -%}
-    <div class="wband__media"><img src="{{ section.settings.image | image_url: width: 1200 }}" alt=""></div>
+    <div class="wband__media"><img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}"></div>
   {%- else -%}
     <div class="wband__media wband__media--placeholder"></div>
   {%- endif -%}
