@@ -190,6 +190,22 @@
     }, { rootMargin: "0px 0px -10% 0px" }).observe(anchor);
   }
 
+  /* ---- back to top ---- */
+  function initBackToTop() {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "to-top";
+    btn.setAttribute("aria-label", "ページ上部へ戻る");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,14 12,8 18,14"/></svg>';
+    document.body.appendChild(btn);
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    window.addEventListener("scroll", function () {
+      btn.classList.toggle("is-shown", window.scrollY > 600);
+    }, { passive: true });
+  }
+
   /* ---- cart count morph ---- */
   function initCartMorph() {
     document.addEventListener("click", function (e) {
@@ -204,6 +220,6 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCartMorph(); initZoom(); initStickyBuy(); });
+  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCartMorph(); initZoom(); initStickyBuy(); initBackToTop(); });
   document.addEventListener("shopify:section:load", function () { bindSteppers(); bindVariants(); armFades(); });
 })();

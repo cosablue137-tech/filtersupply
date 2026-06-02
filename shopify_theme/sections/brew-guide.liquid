@@ -1,0 +1,65 @@
+{%- comment -%} Filter Supply — brew guide (numbered steps + optional image) {%- endcomment -%}
+<section class="brew wrap fade" style="padding:clamp(56px,7vw,100px) 0;">
+  <div class="sec-head">
+    {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+    {%- if section.settings.heading != blank -%}<h2 class="h-serif" style="margin-top:8px;">{{ section.settings.heading }}</h2>{%- endif -%}
+  </div>
+
+  <div class="brew__grid{% if section.settings.image != blank %} brew__grid--media{% endif %}">
+    {%- if section.settings.image != blank -%}
+      <div class="brew__media">
+        <img src="{{ section.settings.image | image_url: width: 1000 }}"
+             srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1000 }} 1000w"
+             sizes="(max-width:980px) 100vw, 42vw"
+             alt="{{ section.settings.heading | escape }}" loading="lazy"
+             width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
+      </div>
+    {%- endif -%}
+
+    <ol class="brew__steps">
+      {%- for block in section.blocks -%}
+        <li class="brew__step" {{ block.shopify_attributes }}>
+          <span class="brew__num">{{ forloop.index }}</span>
+          <div class="brew__body">
+            {%- if block.settings.title != blank -%}<h3 class="brew__title">{{ block.settings.title }}</h3>{%- endif -%}
+            {%- if block.settings.text != blank -%}<p class="brew__text">{{ block.settings.text }}</p>{%- endif -%}
+            {%- if block.settings.meta != blank -%}<span class="brew__meta">{{ block.settings.meta }}</span>{%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ブリューガイド",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "ラベル", "default": "How to Brew" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "ハンドドリップの淹れ方" },
+    { "type": "image_picker", "id": "image", "label": "画像（任意）" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "手順",
+      "settings": [
+        { "type": "text", "id": "title", "label": "見出し", "default": "蒸らす" },
+        { "type": "textarea", "id": "text", "label": "本文", "default": "粉全体にお湯を含ませ、30秒ほど蒸らします。" },
+        { "type": "text", "id": "meta", "label": "メモ（分量・時間など）", "default": "30ml · 30秒" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ブリューガイド",
+      "blocks": [
+        { "type": "step", "settings": { "title": "計量", "text": "豆15g、お湯240ml（92℃前後）を用意します。", "meta": "15g : 240ml · 92℃" } },
+        { "type": "step", "settings": { "title": "蒸らす", "text": "粉全体にお湯を含ませ、30秒ほど蒸らします。", "meta": "30ml · 0:30" } },
+        { "type": "step", "settings": { "title": "注湯", "text": "中心から「の」の字を描くように、数回に分けて注ぎます。", "meta": "2:30 で抽出完了" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
