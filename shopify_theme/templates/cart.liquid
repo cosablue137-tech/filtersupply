@@ -1,5 +1,5 @@
 {%- comment -%} Filter Supply — cart page (Beyond style table) {%- endcomment -%}
-<main class="cart">
+<div class="cart">
   <h1 class="cart__title">{{ 'cart.title_full' | t }}</h1>
 
   {%- if cart.item_count == 0 -%}
@@ -47,7 +47,7 @@
         </div>
         <div class="cart__sum">
           <span class="label label--mute">{{ 'cart.total' | t }}</span>
-          <div class="cart__total">{{ cart.total_price | money }} {{ cart.currency.iso_code }}</div>
+          <div class="cart__total">{{ cart.total_price | money_with_currency }}</div>
           <p class="cart__taxes">{{ 'cart.taxes_note' | t }}</p>
           <div class="cart__actions">
             <a class="ulink" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
@@ -57,4 +57,4 @@
       </div>
     </form>
   {%- endif -%}
-</main>
+</div>

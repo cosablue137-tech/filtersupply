@@ -1,5 +1,5 @@
 {
-  "general": { "page": "Page", "previous": "Previous", "next": "Next", "search": "Search" },
+  "general": { "page": "Page", "previous": "Previous", "next": "Next", "search": "Search", "skip_to_content": "Skip to content" },
   "newsletter": { "placeholder": "Email address", "subscribe": "Subscribe", "join": "Join", "success": "Thank you for subscribing." },
   "product": {
     "add_to_cart": "Add to Cart",
@@ -27,5 +27,13 @@
     "taxes_note": "Taxes & shipping calculated at checkout"
   },
   "search": { "title": "Search", "placeholder": "Enter a keyword", "no_results": "No results found.", "results_for": "Results for \u201c{{ terms }}\u201d" },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "message": "Message",
+    "send": "Send Message",
+    "success": "Thank you. We'll be in touch within 2–3 business days."
+  },
   "error": { "404_title": "Page Not Found", "404_body": "The page could not be found.", "home": "Back to Home" }
 }

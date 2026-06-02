@@ -1,5 +1,5 @@
 {
-  "general": { "page": "ページ", "previous": "前へ", "next": "次へ", "search": "検索" },
+  "general": { "page": "ページ", "previous": "前へ", "next": "次へ", "search": "検索", "skip_to_content": "メインコンテンツへ移動" },
   "newsletter": { "placeholder": "メールアドレス", "subscribe": "登録する", "join": "登録", "success": "ご登録ありがとうございます。" },
   "product": {
     "add_to_cart": "カートに入れる",
@@ -27,5 +27,13 @@
     "taxes_note": "税・送料はレジで計算されます — Taxes & shipping calculated at checkout"
   },
   "search": { "title": "検索", "placeholder": "キーワードを入力", "no_results": "該当する商品が見つかりませんでした。", "results_for": "「{{ terms }}」の検索結果" },
+  "contact": {
+    "name": "お名前",
+    "email": "メールアドレス",
+    "phone": "電話番号（任意）",
+    "message": "メッセージ",
+    "send": "送信する",
+    "success": "送信が完了しました。2〜3営業日以内にご連絡いたします。"
+  },
   "error": { "404_title": "Page Not Found", "404_body": "お探しのページは見つかりませんでした。", "home": "Back to Home" }
 }

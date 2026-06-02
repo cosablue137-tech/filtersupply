@@ -5,7 +5,7 @@
    (Cormorant Garamond) + tracked light sans (Jost) for everything else.
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Noto+Serif+JP:wght@300;400&display=swap");
+/* フォントは theme.liquid の <link rel="stylesheet"> で読み込み済み */
 
 :root {
   --white:    #ffffff;
@@ -495,6 +495,22 @@ body::after {
   background-size: 220px;
 }
 
+/* Skip link — accessibility */
+.skip-link {
+  position: absolute;
+  left: 8px; top: -60px;
+  z-index: 300;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: var(--track-sm);
+  text-decoration: none;
+  transition: top .2s var(--ease);
+}
+.skip-link:focus { top: 8px; }
+
 /* Scroll progress — thin line at top of viewport */
 #scroll-progress {
   position: fixed;
@@ -770,30 +786,6 @@ body::after {
 /* ============================================================
    REFINED UX LAYER
    ============================================================ */
-@media (pointer: fine) {
-  * { cursor: none !important; }
-  .cur-dot {
-    position: fixed; top: 0; left: 0; z-index: 99999;
-    width: 6px; height: 6px; background: var(--ink); border-radius: 50%;
-    pointer-events: none; will-change: transform;
-    transition: opacity .25s var(--ease), background-color .3s var(--ease);
-  }
-  .cur-dot.is-light { background: var(--white); }
-  .cur-ring {
-    position: fixed; top: 0; left: 0; z-index: 99998;
-    width: 32px; height: 32px; border: 1px solid rgba(26,26,24,.35); border-radius: 50%;
-    pointer-events: none; will-change: transform;
-    transition: width .45s var(--ease), height .45s var(--ease), border-color .3s var(--ease);
-  }
-  .cur-ring.is-hover { width: 52px; height: 52px; border-color: rgba(26,26,24,.55); }
-  .cur-ring.is-light { border-color: rgba(255,255,255,.5); }
-  .cur-ring.is-light.is-hover { border-color: rgba(255,255,255,.8); }
-}
-.page-veil {
-  position: fixed; inset: 0; z-index: 99997; background: var(--paper);
-  pointer-events: none; opacity: 1; transition: opacity .42s var(--ease);
-}
-.page-veil.is-in { opacity: 0; }
 .hdr--light { background-color: transparent !important; border-color: transparent !important; box-shadow: none !important; }
 .hdr--light .hdr__nav a,
 .hdr--light .hdr__tools a,
@@ -807,7 +799,70 @@ body::after {
 }
 .cart-pop { animation: cartPop .38s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) {
-  .page-veil { transition: none; }
-  .cur-dot, .cur-ring { display: none; }
-  * { cursor: auto !important; }
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ============================================================
+   GIFT PAGE
+   ============================================================ */
+.gpg {
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  min-height: clamp(480px, 56vw, 680px); align-items: stretch;
+}
+.gpg__media { position: relative; overflow: hidden; background: var(--soft); }
+.gpg__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gpg__text {
+  background: var(--cream);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(48px, 7vw, 96px) clamp(36px, 5vw, 72px); gap: 18px;
+}
+.gpg .eyebrow { color: var(--muted); }
+.gpg__heading {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 3rem); letter-spacing: .02em; color: var(--ink); margin: 0;
+}
+.gpg__body {
+  font-family: var(--jp); font-size: 14px; line-height: 2.1;
+  color: var(--ink-60); margin: 0; max-width: 34em;
+}
+.gpg__note {
+  font-family: var(--sans); font-size: 10px;
+  letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted);
+}
+@media (max-width: 640px) {
+  .gpg { grid-template-columns: 1fr; }
+  .gpg__media { min-height: 280px; order: -1; }
+}
+
+/* ============================================================
+   CONTACT PAGE
+   ============================================================ */
+.contact-pg { padding: clamp(56px, 8vw, 110px) var(--gutter); max-width: 680px; }
+.contact-pg__head { margin-bottom: clamp(36px, 5vw, 56px); }
+.contact-pg__head .eyebrow { display: block; margin-bottom: 12px; }
+.contact-pg__head .h-serif { margin: 0 0 16px; }
+.contact-pg__intro { font-family: var(--jp); font-size: 14px; line-height: 2; color: var(--ink-60); margin: 0; }
+.contact-pg__success {
+  font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm);
+  text-transform: uppercase; color: var(--ink); margin-bottom: 28px;
+  border-left: 2px solid var(--ink); padding-left: 14px;
+}
+.contact-pg__form { display: flex; flex-direction: column; gap: 22px; }
+.contact-pg__row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.cfield { display: flex; flex-direction: column; gap: 8px; }
+.cfield__label {
+  font-family: var(--sans); font-size: 10px;
+  letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted);
+}
+.cfield__input {
+  border: none; border-bottom: 1px solid var(--line-2); background: none;
+  font-family: var(--sans); font-weight: 300; font-size: 13px;
+  padding: 10px 2px; outline: none; color: var(--ink); width: 100%;
+  transition: border-color .3s var(--ease);
+}
+.cfield__input:focus { border-color: var(--ink); }
+.cfield__input--ta { resize: vertical; min-height: 140px; border: 1px solid var(--line-2); padding: 14px; }
+.cfield__input--ta:focus { border-color: var(--ink); }
+@media (max-width: 640px) {
+  .contact-pg__row { grid-template-columns: 1fr; }
 }
