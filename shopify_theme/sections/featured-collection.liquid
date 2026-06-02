@@ -1,6 +1,9 @@
 {%- comment -%} Filter Supply — product grid (best sellers / seasonal) {%- endcomment -%}
 {%- liquid
   assign collection = section.settings.collection
+  if collection == blank
+    assign collection = collections.all
+  endif
   assign limit = section.settings.count | default: 6
   assign has_products = false
   if collection != blank and collection.products.size > 0
