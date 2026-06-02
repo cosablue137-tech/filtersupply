@@ -8,9 +8,9 @@
 
   <a class="hdr__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
     {%- if section.settings.logo != blank -%}
-      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name }}" width="240">
+      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}">
     {%- else -%}
-      <img src="{{ 'logo-ink.png' | asset_url }}" alt="{{ shop.name }}" width="240">
+      <img src="{{ 'logo-ink.png' | asset_url }}" alt="{{ shop.name }}" width="832" height="124">
     {%- endif -%}
   </a>
 

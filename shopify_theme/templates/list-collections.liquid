@@ -1,15 +1,15 @@
 {%- comment -%} Filter Supply — list of collections {%- endcomment -%}
-<main class="wrap" style="padding:clamp(48px,6vw,90px) 0 clamp(56px,7vw,100px);">
+<div class="wrap" style="padding:clamp(48px,6vw,90px) 0 clamp(56px,7vw,100px);">
   <div class="sec-head"><h1 class="h-serif" style="font-size:clamp(2rem,3.4vw,2.8rem);">Collections</h1></div>
   <div class="pgrid">
     {%- for collection in collections -%}
       <a class="pcard" href="{{ collection.url }}">
         <div class="pcard__media">
-          {%- if collection.featured_image -%}<img src="{{ collection.featured_image | image_url: width: 700 }}" alt="{{ collection.title | escape }}" style="object-fit:cover;padding:0;">{%- endif -%}
+          {%- if collection.featured_image -%}<img src="{{ collection.featured_image | image_url: width: 700 }}" alt="{{ collection.title | escape }}" loading="lazy" width="{{ collection.featured_image.width }}" height="{{ collection.featured_image.height }}" style="object-fit:cover;padding:0;">{%- endif -%}
         </div>
         <h3 class="pcard__name">{{ collection.title }}</h3>
         <p class="pcard__price">{{ collection.products_count }} 点</p>
       </a>
     {%- endfor -%}
   </div>
-</main>
+</div>
