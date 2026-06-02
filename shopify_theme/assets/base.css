@@ -165,8 +165,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
    ============================================================ */
 .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 64px) clamp(24px, 3vw, 56px); }
 .pcard { position: relative; text-align: center; }
-.pcard__media { position: relative; aspect-ratio: 1 / 1.12; background: var(--soft); margin-bottom: 20px; overflow: hidden; }
-.pcard__media image-slot, .pcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 12%; }
+.pcard__media { position: relative; aspect-ratio: 1 / 1; background: var(--soft); margin-bottom: 20px; overflow: hidden; }
+.pcard__media image-slot, .pcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }
 .pcard:hover .pcard__media image-slot, .pcard:hover .pcard__media img { opacity: .82; }
 .pcard__tag { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-family: var(--sans); font-size: 9px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted); background: var(--white); padding: 4px 12px; white-space: nowrap; }
 .pcard__name { font-family: var(--sans); font-weight: 400; font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
@@ -264,9 +264,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .fprod__media { display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: center; }
 .fprod__thumbs { display: flex; flex-direction: column; gap: 12px; }
 .fprod__thumb { aspect-ratio: 1; background: var(--soft); position: relative; overflow: hidden; }
-.fprod__thumb image-slot, .fprod__thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 14%; }
-.fprod__main { aspect-ratio: 1 / 1.05; background: var(--soft); position: relative; overflow: hidden; }
-.fprod__main image-slot, .fprod__main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 14%; }
+.fprod__thumb image-slot, .fprod__thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }
+.fprod__main { aspect-ratio: 1 / 1; background: var(--soft); position: relative; overflow: hidden; }
+.fprod__main image-slot, .fprod__main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }
 .fprod__info { max-width: 380px; }
 .fprod__info .eyebrow { display: block; margin-bottom: 14px; }
 .fprod__info h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 2.6vw, 2.3rem); margin: 0 0 14px; }
