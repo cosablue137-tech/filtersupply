@@ -11,10 +11,24 @@
   <a class="pcard__media" href="{{ product.url }}">
     {%- if tag != blank -%}<span class="pcard__tag">{{ tag }}</span>{%- endif -%}
     {%- if product.featured_image -%}
-      <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
+      <img
+        src="{{ product.featured_image | image_url: width: 700 }}"
+        srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                {{ product.featured_image | image_url: width: 700 }} 700w,
+                {{ product.featured_image | image_url: width: 1000 }} 1000w"
+        sizes="(max-width: 640px) 50vw, (max-width: 980px) 33vw, 25vw"
+        alt="{{ product.title | escape }}"
+        loading="lazy"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}">
     {%- else -%}
       <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:var(--jp);font-size:48px;color:#e4e0d8;">{{ kanji }}</span>
     {%- endif -%}
+    {%- comment -%} ホバー時に中央へフェード（デスクトップ）。モバイルは下の pcard__below を常時表示 {%- endcomment -%}
+    <div class="pcard__overlay" aria-hidden="true">
+      <span class="pcard__overlay-name">{{ product.title }}</span>
+      <span class="pcard__overlay-price">{{ product.price | money }}</span>
+    </div>
   </a>
 
   {%- if product.available -%}
@@ -24,6 +38,10 @@
     </form>
   {%- endif -%}
 
-  <a href="{{ product.url }}"><h3 class="pcard__name">{{ product.title }}</h3></a>
-  <p class="pcard__price">{{ product.price | money }}{% if notes != blank %} · {{ notes }}{% endif %}</p>
+  {%- comment -%} モバイル（タッチ）では名前・価格を常時表示。デスクトップでは非表示でホバー表示に切替 {%- endcomment -%}
+  <a class="pcard__below" href="{{ product.url }}">
+    <h3 class="pcard__name">{{ product.title }}</h3>
+    {%- if notes != blank -%}<span class="eyebrow" style="display:block;color:var(--muted);font-size:9px;margin:4px 0 6px;">{{ notes }}</span>{%- endif -%}
+    <p class="pcard__price">{{ product.price | money }}</p>
+  </a>
 </article>
