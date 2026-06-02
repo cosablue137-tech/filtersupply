@@ -55,6 +55,8 @@
 
     {{ content_for_header }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {%- comment -%} 商品カードのメディアが inline(<a>) で 0x0 に潰れる不具合の確実な修正（アセットキャッシュ回避のためインライン） {%- endcomment -%}
+    <style>.pcard__media{display:block}</style>
 
     <!-- 構造化データ：サイト全体 -->
     <script type="application/ld+json">
