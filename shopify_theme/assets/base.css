@@ -810,11 +810,13 @@ body::after {
 /* ============================================================
    REFINED UX LAYER
    ============================================================ */
-.hdr--light { background-color: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+/* スマートヘッダーの白文字モードは無効化：ヘッダーはヒーローの下の独立した白バーで、
+   白文字だと白背景に溶けて消えるため、常に白背景＋黒文字で可読にする */
+.hdr--light { background-color: var(--white); border-color: var(--line); }
 .hdr--light .hdr__nav a,
 .hdr--light .hdr__tools a,
-.hdr--light .hdr__tools button { color: var(--white); transition: color .6s var(--ease); }
-.hdr--light .hdr__brand img { filter: brightness(0) invert(1); transition: filter .6s var(--ease); }
+.hdr--light .hdr__tools button { color: var(--ink); }
+.hdr--light .hdr__brand img { filter: none; }
 @keyframes cartPop {
   0%   { transform: translateY(0);   opacity: 1; }
   40%  { transform: translateY(-6px); opacity: 0; }

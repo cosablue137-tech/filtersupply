@@ -156,6 +156,6 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initSmartHeader(); initCartMorph(); });
+  document.addEventListener("DOMContentLoaded", function () { bindSteppers(); bindVariants(); armFades(); initMobileNav(); initScrollUI(); initCartMorph(); });
   document.addEventListener("shopify:section:load", function () { bindSteppers(); bindVariants(); armFades(); });
 })();
