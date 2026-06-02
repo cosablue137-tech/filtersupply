@@ -143,7 +143,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink);
   display: flex; align-items: center; gap: 7px;
 }
-.hdr__burger { display: none; }
+.hdr__tools .hdr__burger { display: none; }
 
 /* ============================================================
    HERO (text column left + wide landscape photo right)
@@ -428,9 +428,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .chero image-slot, .chero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .chero h1 { position: relative; font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.4rem); letter-spacing: .04em; color: var(--white); margin: 0; }
 .filterbar { display: flex; align-items: center; justify-content: space-between; padding: 22px var(--gutter); border-bottom: 1px solid var(--line); }
-.filterbar__left { display: flex; gap: 28px; }
-.filterbar__left button { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-.filterbar__view { display: flex; gap: 12px; color: var(--muted); }
+.filterbar__left { display: flex; gap: 28px; align-items: center; }
+.filterbar__count { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.filterbar__sort { display: flex; align-items: center; gap: 10px; }
+.filterbar__sort-label { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.filterbar__sort-select { font-family: var(--sans); font-size: 11px; letter-spacing: var(--track-sm); text-transform: uppercase; color: var(--ink); background: transparent; border: none; border-bottom: 1px solid var(--line-2); padding: 6px 22px 6px 2px; cursor: pointer; outline: none; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231a1a18' stroke-width='1.2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; }
+.filterbar__sort-select:hover { border-color: var(--ink); }
 
 /* ============================================================
    CART
@@ -699,7 +702,7 @@ body::after {
 
 @media (max-width: 640px) {
   .hdr { grid-template-columns: auto 1fr auto; }
-  .hdr__burger { display: flex; }
+  .hdr__tools .hdr__burger { display: flex; }
   .hdr__tools a span.lbl { display: none; }
 
   .hdr__nav {
@@ -724,6 +727,9 @@ body::after {
   }
   .hdr__nav a:last-child { border-bottom: none; }
   .hdr__nav a.is-active, .hdr__nav a:hover { color: var(--ink); opacity: .55; }
+  /* スライドインのパネルは常に紙色背景。ヒーロー上の白文字（hdr--light）が
+     パネル内リンクに適用されると白×紙色で不可視になるため、必ず黒文字に戻す */
+  .hdr--light .hdr__nav a { color: var(--ink); }
   .nav-overlay { display: block; pointer-events: none; }
   .nav-overlay.is-open { pointer-events: auto; }
 
