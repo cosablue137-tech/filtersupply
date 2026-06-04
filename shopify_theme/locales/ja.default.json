@@ -28,7 +28,7 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "note": "Leave a note with your order",
-    "note_ph": "ギフト包装のご希望、配送のご要望など",
+    "note_ph": "",
     "taxes_note": "税・送料はレジで計算されます — Taxes & shipping calculated at checkout",
     "secure": "SSL暗号化による安全なお支払い"
   },

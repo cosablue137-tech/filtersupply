@@ -28,7 +28,7 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "note": "Leave a note with your order",
-    "note_ph": "Gift wrap requests, delivery notes, etc.",
+    "note_ph": "",
     "taxes_note": "Taxes & shipping calculated at checkout",
     "secure": "Secure SSL-encrypted payment"
   },
