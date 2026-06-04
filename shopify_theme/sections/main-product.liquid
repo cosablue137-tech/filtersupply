@@ -74,12 +74,33 @@
       {% form 'product', product, data-product-form: 'true' %}
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
+            {%- liquid
+              assign oname = option.name
+              if option.name == 'Grind Option'
+                assign oname = '挽き方'
+              elsif option.name == 'Net Weight'
+                assign oname = '内容量'
+              endif
+            -%}
             <div style="margin-bottom:18px;" data-option-index="{{ forloop.index0 }}">
-              <div class="eyebrow" style="margin-bottom:10px;">{{ option.name }}</div>
+              <div class="eyebrow" style="margin-bottom:10px;">{{ oname }}</div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;">
                 {%- for value in option.values -%}
+                  {%- liquid
+                    assign vdisp = value
+                    case value
+                      when 'Whole Bean'
+                        assign vdisp = '豆のまま'
+                      when 'Ground (Medium / Drip)'
+                        assign vdisp = '中挽き（ドリップ用など）'
+                      when 'Ground (Coarse / French Press)'
+                        assign vdisp = '粗挽き（フレンチプレスなど）'
+                      when 'Ground (Fine / Espresso)'
+                        assign vdisp = '細挽き（エスプレッソなど）'
+                    endcase
+                  -%}
                   <button type="button" class="sf-chip{% if option.selected_value == value %} is-active{% endif %}" data-value="{{ value | escape }}" aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}"
-                    style="font-family:var(--sans);font-size:11px;letter-spacing:var(--track-sm);text-transform:uppercase;padding:10px 16px;border:1px solid {% if option.selected_value == value %}var(--ink){% else %}var(--line-2){% endif %};background:{% if option.selected_value == value %}var(--ink){% else %}transparent{% endif %};color:{% if option.selected_value == value %}#fff{% else %}var(--ink){% endif %};">{{ value }}</button>
+                    style="font-family:var(--sans);font-size:11px;letter-spacing:var(--track-sm);text-transform:uppercase;padding:10px 16px;border:1px solid {% if option.selected_value == value %}var(--ink){% else %}var(--line-2){% endif %};background:{% if option.selected_value == value %}var(--ink){% else %}transparent{% endif %};color:{% if option.selected_value == value %}#fff{% else %}var(--ink){% endif %};">{{ vdisp }}</button>
                 {%- endfor -%}
               </div>
             </div>
