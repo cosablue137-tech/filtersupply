@@ -279,6 +279,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .fprod { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 5vw, 80px); align-items: center; padding: clamp(48px, 6vw, 90px) 0; }
 .fprod__media { display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: center; }
 .fprod__media--single { grid-template-columns: 1fr; }
+/* 注目の商品（単一画像）：全体を中央寄せし、画像が大きくなりすぎないようバランス */
+.fprod--centered { max-width: 980px; margin-left: auto; margin-right: auto; }
+.fprod--centered .fprod__media--single { max-width: 440px; }
 .fprod__thumbs { display: flex; flex-direction: column; gap: 12px; }
 .fprod__thumb { aspect-ratio: 1; background: var(--soft); position: relative; overflow: hidden; }
 .fprod__thumb image-slot, .fprod__thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }

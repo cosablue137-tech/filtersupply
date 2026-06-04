@@ -14,7 +14,7 @@
   endif
 -%}
 <section class="wrap" style="padding:clamp(48px,6vw,90px) 0;">
-  <div class="fprod">
+  <div class="fprod fprod--centered">
     <div class="fprod__media fprod__media--single">
       <div class="fprod__main">
         {%- if product != blank and product.featured_image != blank -%}<img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">{%- endif -%}
