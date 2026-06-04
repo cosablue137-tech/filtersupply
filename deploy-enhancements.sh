@@ -17,6 +17,7 @@ shopify theme push \
   --only sections/main-product.liquid \
   --only templates/cart.liquid \
   --only snippets/icon.liquid \
+  --only snippets/product-card.liquid \
   --only assets/base.css \
   --only assets/theme.js \
   --only locales/ja.default.json \
