@@ -3,9 +3,24 @@
   Optional metafields: custom.notes (text), custom.tag (text), custom.kanji (text).
 {%- endcomment -%}
 {%- liquid
-  assign notes = product.metafields.custom.notes
   assign tag = product.metafields.custom.tag
   assign kanji = product.metafields.custom.kanji | default: '豆'
+  # 商品名を「英字の豆名」と「焙煎度＋容器」に2分割（焙煎度キーワードで区切る）
+  assign title_main = product.title
+  assign title_sub = ''
+  assign roasts = '中深煎り,中浅煎り,浅煎り,中煎り,深煎り' | split: ','
+  for r in roasts
+    if product.title contains r
+      assign sp = product.title | split: r
+      assign title_main = sp[0] | strip
+      assign sub_rest = sp[1] | default: '' | strip
+      assign title_sub = r
+      if sub_rest != ''
+        assign title_sub = r | append: ' ' | append: sub_rest
+      endif
+      break
+    endif
+  endfor
 -%}
 <article class="pcard">
   <a class="pcard__media" href="{{ product.url }}">
@@ -26,7 +41,8 @@
     {%- endif -%}
     {%- comment -%} ホバー時に中央へフェード（デスクトップ）。モバイルは下の pcard__below を常時表示 {%- endcomment -%}
     <div class="pcard__overlay" aria-hidden="true">
-      <span class="pcard__overlay-name">{{ product.title }}</span>
+      <span class="pcard__overlay-name">{{ title_main }}</span>
+      {%- if title_sub != blank -%}<span class="pcard__overlay-sub">{{ title_sub }}</span>{%- endif -%}
       <span class="pcard__overlay-price">{{ product.price | money }}</span>
     </div>
   </a>
@@ -40,8 +56,8 @@
 
   {%- comment -%} モバイル（タッチ）では名前・価格を常時表示。デスクトップでは非表示でホバー表示に切替 {%- endcomment -%}
   <a class="pcard__below" href="{{ product.url }}">
-    <h3 class="pcard__name">{{ product.title }}</h3>
-    {%- if notes != blank -%}<span class="eyebrow" style="display:block;color:var(--muted);font-size:9px;margin:4px 0 6px;">{{ notes }}</span>{%- endif -%}
+    <h3 class="pcard__name">{{ title_main }}</h3>
+    {%- if title_sub != blank -%}<span class="pcard__sub">{{ title_sub }}</span>{%- endif -%}
     <p class="pcard__price">{{ product.price | money }}</p>
   </a>
 </article>
