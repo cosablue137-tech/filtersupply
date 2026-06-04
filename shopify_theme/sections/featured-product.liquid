@@ -3,20 +3,19 @@
   Pick a product in the theme editor. Falls back to a placeholder.
 {%- endcomment -%}
 {%- liquid
-  assign product = all_products[section.settings.product]
+  assign product = blank
+  if section.settings.product != blank
+    assign product = all_products[section.settings.product]
+  endif
+  if product == blank
+    for _fp in collections.all.products limit: 1
+      assign product = _fp
+    endfor
+  endif
 -%}
 <section class="wrap" style="padding:clamp(48px,6vw,90px) 0;">
   <div class="fprod">
-    <div class="fprod__media">
-      <div class="fprod__thumbs">
-        {%- if product != blank -%}
-          {%- for image in product.images limit: 3 -%}
-            <div class="fprod__thumb"><img src="{{ image | image_url: width: 240 }}" alt="" loading="lazy" width="{{ image.width }}" height="{{ image.height }}"></div>
-          {%- endfor -%}
-        {%- else -%}
-          <div class="fprod__thumb"></div><div class="fprod__thumb"></div><div class="fprod__thumb"></div>
-        {%- endif -%}
-      </div>
+    <div class="fprod__media fprod__media--single">
       <div class="fprod__main">
         {%- if product != blank and product.featured_image != blank -%}<img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title | escape }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">{%- endif -%}
       </div>
@@ -27,13 +26,21 @@
       <h2>{{ product.title | default: section.settings.fallback_title }}</h2>
       <p class="fprod__price">{% if product != blank %}{{ product.price | money }}{% endif %}</p>
       {%- if product != blank -%}
-        {% form 'product', product, data-cart-form: 'true' %}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {%- if product.available -%}
+          {% form 'product', product, data-cart-form: 'true' %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <div class="fprod__buy">
+              <button class="btn btn--block" type="submit">{{ 'product.add_to_cart' | t }}</button>
+              <button class="btn btn--ghost btn--block" type="submit" name="checkout">{{ 'product.buy_now' | t }}</button>
+            </div>
+          {% endform %}
+        {%- else -%}
+          {%- comment -%} 在庫切れ：商品ページへ誘導し、無効化したカート投入で失敗させない {%- endcomment -%}
           <div class="fprod__buy">
-            <button class="btn btn--block" type="submit">{{ 'product.add_to_cart' | t }}</button>
-            <button class="btn btn--ghost btn--block" type="submit" name="checkout">{{ 'product.buy_now' | t }}</button>
+            <button class="btn btn--block" type="button" disabled>{{ 'product.sold_out' | t }}</button>
+            <a class="btn btn--ghost btn--block" href="{{ product.url }}">{{ 'product.view' | t }}</a>
           </div>
-        {% endform %}
+        {%- endif -%}
       {%- endif -%}
       {%- comment -%} ホーム（index）では説明を非表示。他ページに置いた場合のみ表示 {%- endcomment -%}
       {%- if product.description != blank and template.name != 'index' -%}

@@ -11,7 +11,9 @@
     "details": "Details",
     "brewing": "Brewing",
     "secure": "Secure SSL-encrypted payment",
-    "related": "You may also like"
+    "related": "You may also like",
+    "purchase_type": "Purchase options",
+    "one_time": "One-time purchase"
   },
   "collection": { "empty": "No products." },
   "cart": {

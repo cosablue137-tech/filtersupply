@@ -11,7 +11,9 @@
     "details": "Details",
     "brewing": "Brewing",
     "secure": "SSL暗号化による安全なお支払い",
-    "related": "こちらもおすすめ"
+    "related": "こちらもおすすめ",
+    "purchase_type": "購入タイプ",
+    "one_time": "1回のみ購入"
   },
   "collection": { "empty": "商品がありません。" },
   "cart": {
