@@ -7,34 +7,55 @@
 
 <div class="filterbar">
   <div class="filterbar__left">
-    <button type="button">Browse {% render 'icon', name: 'chevron', size: 11 %}</button>
-    <button type="button">Sort By {% render 'icon', name: 'chevron', size: 11 %}</button>
-    <button type="button">Refine {% render 'icon', name: 'chevron', size: 11 %}</button>
+    <span class="filterbar__count">{{ collection.products_count }} 点</span>
   </div>
-  <div class="filterbar__view">
-    <button type="button" aria-label="グリッド">{% render 'icon', name: 'grid', size: 15 %}</button>
-    <button type="button" aria-label="リスト">{% render 'icon', name: 'list', size: 15 %}</button>
-  </div>
+  <form method="get" class="filterbar__sort">
+    {%- assign cur_sort = collection.sort_by | default: collection.default_sort_by -%}
+    <label for="SortBy" class="filterbar__sort-label">並び替え</label>
+    <select id="SortBy" name="sort_by" class="filterbar__sort-select" onchange="this.form.submit()">
+      {%- for option in collection.sort_options -%}
+        <option value="{{ option.value }}"{% if option.value == cur_sort %} selected{% endif %}>{{ option.name }}</option>
+      {%- endfor -%}
+    </select>
+  </form>
 </div>
 
 <section class="wrap" style="padding:clamp(40px,5vw,72px) 0;">
-  {%- paginate collection.products by 12 -%}
+  {%- paginate collection.products by 48 -%}
+    {%- comment -%} プロモタイル（設定時のみ）を一度だけ定義 {%- endcomment -%}
+    {%- capture promo_tile -%}
+      {%- if section.settings.promo_image != blank -%}
+        <a class="ptile" href="{{ section.settings.promo_link | default: routes.all_products_collection_url }}">
+          <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="" loading="lazy" width="{{ section.settings.promo_image.width }}" height="{{ section.settings.promo_image.height }}">
+          <div class="ptile__in">
+            <span class="eyebrow">{{ section.settings.promo_eyebrow }}</span>
+            <h3 class="h-serif">{{ section.settings.promo_heading }}</h3>
+            <span class="ulink" style="color:#fff">{{ section.settings.promo_link_label }}</span>
+          </div>
+        </a>
+      {%- endif -%}
+    {%- endcapture -%}
     <div class="pgrid">
-      {%- for product in collection.products -%}
-        {% render 'product-card', product: product %}
-        {%- if forloop.index == 3 and section.settings.promo_image != blank -%}
-          <a class="ptile" href="{{ section.settings.promo_link | default: '#' }}">
-            <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="" loading="lazy" width="{{ section.settings.promo_image.width }}" height="{{ section.settings.promo_image.height }}">
-            <div class="ptile__in">
-              <span class="eyebrow">{{ section.settings.promo_eyebrow }}</span>
-              <h3 class="h-serif">{{ section.settings.promo_heading }}</h3>
-              <span class="ulink" style="color:#fff">{{ section.settings.promo_link_label }}</span>
-            </div>
-          </a>
-        {%- endif -%}
+      {%- if collection.products.size > 0 -%}
+        {%- assign idx = 0 -%}
+        {%- comment -%} 先に「瓶」、後に「袋（リフィル等）」 {%- endcomment -%}
+        {%- for product in collection.products -%}
+          {%- if product.title contains '瓶' -%}
+            {% render 'product-card', product: product %}
+            {%- assign idx = idx | plus: 1 -%}
+            {%- if idx == 3 -%}{{ promo_tile }}{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- for product in collection.products -%}
+          {%- unless product.title contains '瓶' -%}
+            {% render 'product-card', product: product %}
+            {%- assign idx = idx | plus: 1 -%}
+            {%- if idx == 3 -%}{{ promo_tile }}{%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
       {%- else -%}
         <p class="serif" style="font-size:1.4rem;">{{ 'collection.empty' | t }}</p>
-      {%- endfor -%}
+      {%- endif -%}
     </div>
 
     {%- if paginate.pages > 1 -%}
