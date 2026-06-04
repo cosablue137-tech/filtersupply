@@ -290,10 +290,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .fprod__thumb image-slot, .fprod__thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }
 .fprod__main { aspect-ratio: 1 / 1; background: var(--soft); position: relative; overflow: hidden; }
 .fprod__main image-slot, .fprod__main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; padding: 0; }
-.fprod__info { max-width: 380px; }
+.fprod__info { max-width: 480px; }
 .fprod__info .eyebrow { display: block; margin-bottom: 14px; }
 .fprod__info h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 2.6vw, 2.3rem); margin: 0 0 14px; text-wrap: balance; }
-.fprod__title-sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 13px; letter-spacing: var(--track-sm); color: var(--ink-60); line-height: 1.6; word-break: keep-all; }
+.fprod__title-sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 16px; letter-spacing: var(--track-sm); color: var(--ink); line-height: 1.6; word-break: keep-all; }
 .fprod__title-sub:first-of-type { margin-top: 12px; }
 .fprod__price { font-family: var(--sans); font-weight: 300; font-size: 16px; letter-spacing: .04em; color: var(--ink); margin: 0 0 28px; }
 .fprod__buy { display: flex; flex-direction: column; gap: 12px; max-width: 320px; }
