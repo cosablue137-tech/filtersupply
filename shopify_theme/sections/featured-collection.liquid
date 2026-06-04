@@ -12,7 +12,7 @@
 -%}
 {%- comment -%} 商品が無いときは本番では非表示（崩れたダミーを出さない）。エディタでは設定を促す {%- endcomment -%}
 {%- if has_products or request.design_mode -%}
-<section class="wrap fade" style="padding:clamp(56px,7vw,100px) 0;">
+<section class="wrap fade" style="padding:clamp(28px,3.5vw,44px) 0 clamp(56px,7vw,100px);">
   <div class="sec-head">
     {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
     <h2 class="sec-title" style="margin-top:8px;">{{ section.settings.heading }}</h2>

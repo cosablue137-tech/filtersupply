@@ -11,6 +11,7 @@ shopify theme push \
   --allow-live \
   --only sections/footer.liquid \
   --only sections/featured-product.liquid \
+  --only sections/featured-collection.liquid \
   --only sections/value-props.liquid \
   --only sections/brew-guide.liquid \
   --only sections/main-product.liquid \
