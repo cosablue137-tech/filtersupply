@@ -81,11 +81,41 @@
               elsif option.name == 'Net Weight'
                 assign oname = '内容量'
               endif
+              # 挽き方の表示順を固定：豆のまま→中挽き→粗挽き→細挽き（日本語/英語どちらの値でも対応）
+              assign grind_keys = '豆のまま,Whole Bean,中挽き,Medium,粗挽き,Coarse,細挽き,Fine' | split: ','
+              assign ordered = ''
+              for key in grind_keys
+                for value in option.values
+                  if value contains key
+                    unless ordered contains value
+                      assign ordered = ordered | append: value | append: '~~'
+                    endunless
+                  endif
+                endfor
+              endfor
+              for value in option.values
+                unless ordered contains value
+                  assign ordered = ordered | append: value | append: '~~'
+                endunless
+              endfor
+              assign ordered_values = ordered | split: '~~'
+              # 挽き方オプションを判定し、その場合は先頭（豆のまま）を初期選択に
+              assign is_grind = false
+              for value in option.values
+                if value contains '挽き' or value contains '豆のまま' or value contains 'Whole Bean' or value contains 'Ground'
+                  assign is_grind = true
+                  break
+                endif
+              endfor
+              assign opt_default = option.selected_value
+              if is_grind
+                assign opt_default = ordered_values.first
+              endif
             -%}
             <div style="margin-bottom:18px;" data-option-index="{{ forloop.index0 }}">
               <div class="eyebrow" style="margin-bottom:10px;">{{ oname }}</div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                {%- for value in option.values -%}
+                {%- for value in ordered_values -%}
                   {%- liquid
                     assign vdisp = value
                     case value
@@ -99,8 +129,8 @@
                         assign vdisp = '細挽き（エスプレッソなど）'
                     endcase
                   -%}
-                  <button type="button" class="sf-chip{% if option.selected_value == value %} is-active{% endif %}" data-value="{{ value | escape }}" aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}"
-                    style="font-family:var(--sans);font-size:11px;letter-spacing:var(--track-sm);text-transform:uppercase;padding:10px 16px;border:1px solid {% if option.selected_value == value %}var(--ink){% else %}var(--line-2){% endif %};background:{% if option.selected_value == value %}var(--ink){% else %}transparent{% endif %};color:{% if option.selected_value == value %}#fff{% else %}var(--ink){% endif %};">{{ vdisp }}</button>
+                  <button type="button" class="sf-chip{% if opt_default == value %} is-active{% endif %}" data-value="{{ value | escape }}" aria-pressed="{% if opt_default == value %}true{% else %}false{% endif %}"
+                    style="font-family:var(--sans);font-size:11px;letter-spacing:var(--track-sm);text-transform:uppercase;padding:10px 16px;border:1px solid {% if opt_default == value %}var(--ink){% else %}var(--line-2){% endif %};background:{% if opt_default == value %}var(--ink){% else %}transparent{% endif %};color:{% if opt_default == value %}#fff{% else %}var(--ink){% endif %};">{{ vdisp }}</button>
                 {%- endfor -%}
               </div>
             </div>
