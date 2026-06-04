@@ -63,7 +63,7 @@
       {%- if m.origin != blank -%}<span class="eyebrow">{{ m.origin }}</span>{%- endif -%}
       <h2 class="fprod__title">{{ t_main }}
         {%- if t_roast != blank -%}<span class="fprod__title-sub">{{ t_roast }}</span>{%- endif -%}
-        {%- if t_pkg != blank -%}<span class="fprod__title-sub">{{ t_pkg }}</span>{%- endif -%}
+        {%- if t_pkg != blank -%}<span class="fprod__title-pkg">{{ t_pkg }}</span>{%- endif -%}
       </h2>
       {%- if m.notes != blank -%}<p class="eyebrow" style="margin:-6px 0 14px;color:var(--muted);">{{ m.notes }}</p>{%- endif -%}
       <p class="fprod__price" data-price>{{ v.price | money }}</p>
@@ -76,9 +76,9 @@
           {%- for option in product.options_with_values -%}
             {%- liquid
               assign oname = option.name
-              if option.name == 'Grind Option'
+              if option.name == 'Grind Option' or option.name == '挽目'
                 assign oname = '挽き方'
-              elsif option.name == 'Net Weight'
+              elsif option.name == 'Net Weight' or option.name == '重量'
                 assign oname = '内容量'
               endif
               # 挽き方の表示順を固定：豆のまま→中挽き→粗挽き→細挽き（日本語/英語どちらの値でも対応）

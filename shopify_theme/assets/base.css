@@ -295,6 +295,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .fprod__info h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 2.6vw, 2.3rem); margin: 0 0 14px; text-wrap: balance; }
 .fprod__title-sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 16px; letter-spacing: var(--track-sm); color: var(--ink); line-height: 1.6; word-break: keep-all; }
 .fprod__title-sub:first-of-type { margin-top: 12px; }
+/* パッケージはタグ（ピル）で目立たせる：焙煎度の文字と区別 */
+.fprod__title-pkg {
+  display: inline-block; margin-top: 14px;
+  padding: 6px 18px; border: 1px solid var(--ink); border-radius: 999px;
+  font-family: var(--sans); font-size: 12px; letter-spacing: var(--track-sm);
+  color: var(--ink); line-height: 1.4; word-break: keep-all; white-space: nowrap;
+}
 .fprod__price { font-family: var(--sans); font-weight: 300; font-size: 16px; letter-spacing: .04em; color: var(--ink); margin: 0 0 28px; }
 .fprod__buy { display: flex; flex-direction: column; gap: 12px; max-width: 320px; }
 .fprod__acc { margin-top: 30px; border-top: 1px solid var(--line); }
