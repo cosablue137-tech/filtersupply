@@ -1,7 +1,7 @@
 "use client";
 
 import type { PackingData } from "@/lib/packing";
-import { num, dateTimeJST } from "@/lib/format";
+import { num, grams, dateTimeJST } from "@/lib/format";
 import { downloadCSV } from "@/lib/csv";
 
 export function PackingPanel({ data }: { data: PackingData }) {
@@ -13,6 +13,16 @@ export function PackingPanel({ data }: { data: PackingData }) {
     downloadCSV("picking-list.csv", rows);
   };
 
+  const exportRoast = () => {
+    const rows: (string | number)[][] = [
+      ["豆", "合計重量(g)", "個数"],
+      ...data.roastList.map((r) => [r.bean, r.grams, r.units]),
+    ];
+    downloadCSV("roast-list.csv", rows);
+  };
+
+  const totalGrams = data.roastList.reduce((s, r) => s + r.grams, 0);
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-black/60">
@@ -20,6 +30,61 @@ export function PackingPanel({ data }: { data: PackingData }) {
         未発送 <span className="font-bold text-ink">{num(data.toPackCount)}</span> 件 / 発送済み{" "}
         {num(data.fulfilledCount)} 件
       </div>
+
+      {/* 焙煎リスト（豆ごとの合計重量） */}
+      <div className="rounded-2xl border border-ink/20 bg-white p-5">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-bold text-ink">
+            焙煎リスト（豆ごとの合計）<span className="ml-2 text-xs font-normal text-black/45">合計 {grams(totalGrams)}</span>
+          </h2>
+          <button
+            onClick={exportRoast}
+            disabled={data.roastList.length === 0}
+            className="rounded-lg border border-black/15 px-3 py-1 text-xs font-medium text-ink hover:bg-black/5 disabled:opacity-40"
+          >
+            CSVで保存
+          </button>
+        </div>
+        {data.roastList.length === 0 ? (
+          <p className="text-sm text-black/45">未発送の注文はありません。</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-black/10 text-left text-xs text-black/40">
+                <th className="pb-2 font-medium">豆（焙煎度）</th>
+                <th className="pb-2 text-right font-medium">個数</th>
+                <th className="pb-2 text-right font-medium">合計重量</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.roastList.map((r, i) => (
+                <tr key={i} className="border-b border-black/5 last:border-0">
+                  <td className="py-2 pr-2 font-medium text-ink">{r.bean}</td>
+                  <td className="py-2 text-right tabular-nums text-black/60">{r.units}</td>
+                  <td className="py-2 text-right text-lg font-bold tabular-nums text-ink">{grams(r.grams)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <p className="mt-3 text-xs text-black/40">
+          ※ 販売(焙煎後)重量の合計です。生豆量は焙煎ロス分を加味して見積もってください。
+        </p>
+      </div>
+
+      {/* 挽き目サマリー */}
+      {data.grindSummary.length > 0 && (
+        <div className="rounded-2xl border border-black/10 bg-white p-5">
+          <h2 className="mb-3 text-sm font-bold text-ink">挽き目サマリー（未発送）</h2>
+          <div className="flex flex-wrap gap-2">
+            {data.grindSummary.map((g, i) => (
+              <span key={i} className="rounded-full border border-black/10 bg-black/[0.02] px-3 py-1 text-sm">
+                {g.label} <span className="ml-1 font-bold text-ink">{g.units}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 仕入りリスト（合計数） */}
       <div className="rounded-2xl border border-black/10 bg-white p-5">

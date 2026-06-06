@@ -10,6 +10,12 @@ export function pct(n: number): string {
   return n.toFixed(1) + "%";
 }
 
+// グラム表記（1000g以上は kg）
+export function grams(n: number): string {
+  if (n >= 1000) return (n / 1000).toLocaleString("ja-JP", { maximumFractionDigits: 1 }) + "kg";
+  return n.toLocaleString("ja-JP") + "g";
+}
+
 // YYYY-MM-DD -> M/D
 export function shortDate(iso: string): string {
   const [, m, d] = iso.split("-");
