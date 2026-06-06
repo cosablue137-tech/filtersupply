@@ -7,3 +7,24 @@ body {
   background-color: #faf9f7;
   color: #1a1a1a;
 }
+
+/* 印刷時: ナビ・ボタンを隠し、内容だけをきれいに出す */
+@media print {
+  .no-print,
+  button {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff;
+  }
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  /* カードがページをまたいで切れないように */
+  .grid > div,
+  table {
+    break-inside: avoid;
+  }
+}

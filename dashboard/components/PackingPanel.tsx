@@ -21,6 +21,24 @@ export function PackingPanel({ data }: { data: PackingData }) {
     downloadCSV("roast-list.csv", rows);
   };
 
+  const exportLabels = () => {
+    const targets = data.orders.filter((o) => !o.fulfilled);
+    const rows: (string | number)[][] = [
+      ["注文番号", "氏名", "郵便番号", "都道府県", "市区町村", "住所1", "住所2", "電話"],
+      ...targets.map((o) => [
+        o.name,
+        o.address.name,
+        o.address.zip,
+        o.address.province,
+        o.address.city,
+        o.address.address1,
+        o.address.address2,
+        o.address.phone,
+      ]),
+    ];
+    downloadCSV("shipping-labels.csv", rows);
+  };
+
   const totalGrams = data.roastList.reduce((s, r) => s + r.grams, 0);
 
   // 注文からの経過日数（JST基準のざっくり日数）
@@ -29,10 +47,27 @@ export function PackingPanel({ data }: { data: PackingData }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-black/60">
-        <span className="font-medium text-ink">{data.cutoffLabel}</span> が対象。
-        未発送 <span className="font-bold text-ink">{num(data.toPackCount)}</span> 件 / 発送済み{" "}
-        {num(data.fulfilledCount)} 件
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-black/10 bg-white p-4 text-sm text-black/60">
+        <div>
+          <span className="font-medium text-ink">{data.cutoffLabel}</span> が対象。
+          未発送 <span className="font-bold text-ink">{num(data.toPackCount)}</span> 件 / 発送済み{" "}
+          {num(data.fulfilledCount)} 件
+        </div>
+        <div className="no-print flex gap-2">
+          <button
+            onClick={exportLabels}
+            disabled={data.toPackCount === 0}
+            className="rounded-lg border border-black/15 px-3 py-1 text-xs font-medium text-ink hover:bg-black/5 disabled:opacity-40"
+          >
+            発送ラベルCSV
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="rounded-lg border border-black/15 px-3 py-1 text-xs font-medium text-ink hover:bg-black/5"
+          >
+            印刷
+          </button>
+        </div>
       </div>
 
       {/* 焙煎リスト（豆ごとの合計重量） */}

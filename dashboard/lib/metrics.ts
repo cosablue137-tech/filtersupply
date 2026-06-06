@@ -32,6 +32,13 @@ export type Metrics = {
     returningCount: number;
     repeatRate: number; // リピート率（%）
   };
+  // 直前の同じ長さの期間との比較
+  comparison: {
+    prevSales: number;
+    prevOrders: number;
+    salesDelta: number | null; // %（前期間が0ならnull）
+    ordersDelta: number | null;
+  };
 };
 
 function dateKey(iso: string): string {
@@ -105,13 +112,29 @@ export function aggregate(orders: Order[], period: Period): Metrics {
     daily: Array.from(daily.values()),
     products,
     customers: { newCount, returningCount, repeatRate },
+    comparison: { prevSales: 0, prevOrders: 0, salesDelta: null, ordersDelta: null },
   };
 }
 
 export async function getMetrics(period: Period): Promise<Metrics> {
-  const since = new Date();
-  since.setUTCDate(since.getUTCDate() - period);
-  const sinceISO = since.toISOString().slice(0, 10);
-  const orders = await fetchOrders(sinceISO);
-  return aggregate(orders, period);
+  const dayMs = 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const curStart = now - period * dayMs;
+  const prevStart = new Date(now - 2 * period * dayMs).toISOString().slice(0, 10);
+
+  // 現在＋前期間をまとめて取得（カットオフは fetchOrders 側で適用）
+  const all = await fetchOrders(prevStart);
+  const current = all.filter((o) => new Date(o.createdAt).getTime() >= curStart);
+  const previous = all.filter((o) => new Date(o.createdAt).getTime() < curStart);
+
+  const m = aggregate(current, period);
+  const prevSales = previous.reduce((s, o) => s + o.netSales, 0);
+  const prevOrders = previous.length;
+  m.comparison = {
+    prevSales,
+    prevOrders,
+    salesDelta: prevSales > 0 ? ((m.kpi.totalSales - prevSales) / prevSales) * 100 : null,
+    ordersDelta: prevOrders > 0 ? ((m.kpi.orderCount - prevOrders) / prevOrders) * 100 : null,
+  };
+  return m;
 }

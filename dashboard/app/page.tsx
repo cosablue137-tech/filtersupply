@@ -113,7 +113,7 @@ export default function DashboardPage() {
       </header>
 
       {/* タブ */}
-      <div className="mb-6 inline-flex rounded-lg border border-black/10 bg-white p-1">
+      <div className="no-print mb-6 inline-flex rounded-lg border border-black/10 bg-white p-1">
         {(["sales", "packing", "instagram"] as Tab[]).map((t) => (
           <button
             key={t}
@@ -142,8 +142,17 @@ export default function DashboardPage() {
           {metrics && (
             <div className={loading ? "opacity-60 transition" : "transition"}>
               <section className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                <KPICard label="総売上" value={yen(metrics.kpi.totalSales)} sub={`直近${metrics.period}日`} />
-                <KPICard label="注文数" value={`${num(metrics.kpi.orderCount)} 件`} />
+                <KPICard
+                  label="総売上"
+                  value={yen(metrics.kpi.totalSales)}
+                  sub={`直近${metrics.period}日`}
+                  delta={metrics.comparison.salesDelta}
+                />
+                <KPICard
+                  label="注文数"
+                  value={`${num(metrics.kpi.orderCount)} 件`}
+                  delta={metrics.comparison.ordersDelta}
+                />
                 <KPICard label="平均注文額" value={yen(metrics.kpi.aov)} />
                 <KPICard label="新規顧客" value={`${num(metrics.kpi.newCustomers)} 件`} />
               </section>

@@ -338,6 +338,16 @@ export type PackingLineItem = {
   quantity: number;
 };
 
+export type ShipAddress = {
+  name: string;
+  zip: string;
+  province: string; // 都道府県
+  city: string;
+  address1: string;
+  address2: string;
+  phone: string;
+};
+
 export type PackingOrder = {
   id: string;
   name: string; // #FS1043 など
@@ -345,6 +355,7 @@ export type PackingOrder = {
   customerName: string;
   fulfilled: boolean; // true=発送済み, false=未発送（要梱包）
   fulfillmentStatus: string;
+  address: ShipAddress; // 発送ラベル用
   lineItems: PackingLineItem[];
 };
 
@@ -358,7 +369,15 @@ const PACKING_QUERY = /* GraphQL */ `
         createdAt
         displayFulfillmentStatus
         customer { displayName }
-        shippingAddress { name }
+        shippingAddress {
+          name
+          zip
+          province
+          city
+          address1
+          address2
+          phone
+        }
         lineItems(first: 50) {
           nodes { title variantTitle quantity }
         }
@@ -366,6 +385,16 @@ const PACKING_QUERY = /* GraphQL */ `
     }
   }
 `;
+
+type RawShippingAddress = {
+  name: string | null;
+  zip: string | null;
+  province: string | null;
+  city: string | null;
+  address1: string | null;
+  address2: string | null;
+  phone: string | null;
+};
 
 type RawPackingData = {
   orders: {
@@ -376,7 +405,7 @@ type RawPackingData = {
       createdAt: string;
       displayFulfillmentStatus: string;
       customer: { displayName: string | null } | null;
-      shippingAddress: { name: string | null } | null;
+      shippingAddress: RawShippingAddress | null;
       lineItems: { nodes: Array<{ title: string; variantTitle: string | null; quantity: number }> };
     }>;
   };
@@ -394,13 +423,23 @@ export async function fetchPackingOrders(): Promise<PackingOrder[]> {
     });
     for (const node of data.orders.nodes) {
       if (isExcludedOrder(node.name)) continue;
+      const sa = node.shippingAddress;
       orders.push({
         id: node.id,
         name: node.name,
         createdAt: node.createdAt,
-        customerName: node.shippingAddress?.name || node.customer?.displayName || "（名前なし）",
+        customerName: sa?.name || node.customer?.displayName || "（名前なし）",
         fulfilled: node.displayFulfillmentStatus === "FULFILLED",
         fulfillmentStatus: node.displayFulfillmentStatus,
+        address: {
+          name: sa?.name ?? "",
+          zip: sa?.zip ?? "",
+          province: sa?.province ?? "",
+          city: sa?.city ?? "",
+          address1: sa?.address1 ?? "",
+          address2: sa?.address2 ?? "",
+          phone: sa?.phone ?? "",
+        },
         lineItems: node.lineItems.nodes.map((li) => ({
           title: li.title,
           variantTitle: li.variantTitle,
