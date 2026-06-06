@@ -46,8 +46,13 @@ export function PackingPanel({ data }: { data: PackingData }) {
     }
   };
 
+  // 明細キー（注文ID#明細index）
+  const itemKey = (orderId: string, i: number) => `${orderId}#${i}`;
+  const orderFullyPrepared = (o: { id: string; lineItems: unknown[] }) =>
+    o.lineItems.length > 0 && o.lineItems.every((_, i) => prepared.has(itemKey(o.id, i)));
+
   const toPack = data.orders.filter((o) => !o.fulfilled);
-  const preparedToPack = toPack.filter((o) => prepared.has(o.id)).length;
+  const preparedToPack = toPack.filter(orderFullyPrepared).length;
 
   const exportPicking = () => {
     const rows: (string | number)[][] = [
@@ -234,14 +239,15 @@ export function PackingPanel({ data }: { data: PackingData }) {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {data.orders.map((o) => {
-              const isPrepared = prepared.has(o.id);
+              const doneCount = o.lineItems.filter((_, i) => prepared.has(itemKey(o.id, i))).length;
+              const allDone = !o.fulfilled && orderFullyPrepared(o);
               return (
               <div
                 key={o.id}
                 className={`rounded-xl border p-4 ${
                   o.fulfilled
                     ? "border-black/10 bg-black/[0.02] opacity-60"
-                    : isPrepared
+                    : allDone
                     ? "border-emerald-300 bg-emerald-50/50"
                     : "border-ink/20 bg-white"
                 }`}
@@ -268,44 +274,61 @@ export function PackingPanel({ data }: { data: PackingData }) {
                     );
                   })()}
                 </div>
-                <p className="mb-2 text-xs text-black/45">
-                  {o.customerName} ・ {dateTimeJST(o.createdAt)}
+                <p className="mb-2 flex items-center justify-between text-xs text-black/45">
+                  <span>{o.customerName} ・ {dateTimeJST(o.createdAt)}</span>
+                  {!o.fulfilled && (
+                    <span className={allDone ? "font-bold text-emerald-700" : "text-black/45"}>
+                      {allDone ? "✓ 準備済み" : `準備 ${doneCount}/${o.lineItems.length}`}
+                    </span>
+                  )}
                 </p>
                 <ul className="space-y-1 text-sm">
-                  {o.lineItems.map((li, i) => (
-                    <li key={i} className="flex items-start justify-between gap-2">
-                      <span className="text-ink">
-                        {li.title}
-                        {li.variantTitle && (
-                          <span className="block text-xs text-black/55">{li.variantTitle}</span>
-                        )}
-                      </span>
-                      <span className="shrink-0 font-bold tabular-nums text-ink">×{li.quantity}</span>
-                    </li>
-                  ))}
+                  {o.lineItems.map((li, i) => {
+                    const key = itemKey(o.id, i);
+                    const checked = prepared.has(key);
+                    // 発送済みは表示のみ、未発送は豆ごとにチェック可能
+                    if (o.fulfilled) {
+                      return (
+                        <li key={i} className="flex items-start justify-between gap-2">
+                          <span className="text-ink">
+                            {li.title}
+                            {li.variantTitle && (
+                              <span className="block text-xs text-black/55">{li.variantTitle}</span>
+                            )}
+                          </span>
+                          <span className="shrink-0 font-bold tabular-nums text-ink">×{li.quantity}</span>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={i}>
+                        <label
+                          className={`flex cursor-pointer items-start justify-between gap-2 rounded-md px-2 py-1 ${
+                            checked ? "bg-emerald-100/70" : "hover:bg-black/5"
+                          }`}
+                        >
+                          <span className="flex items-start gap-2">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => togglePrepared(key)}
+                              disabled={!prepConfigured}
+                              className="no-print mt-0.5 h-4 w-4 accent-emerald-600"
+                            />
+                            <span className={checked ? "text-emerald-800 line-through decoration-emerald-600/50" : "text-ink"}>
+                              {checked && <span className="print:inline">✓ </span>}
+                              {li.title}
+                              {li.variantTitle && (
+                                <span className="block text-xs text-black/55">{li.variantTitle}</span>
+                              )}
+                            </span>
+                          </span>
+                          <span className="shrink-0 font-bold tabular-nums text-ink">×{li.quantity}</span>
+                        </label>
+                      </li>
+                    );
+                  })}
                 </ul>
-                {!o.fulfilled && (
-                  <label
-                    className={`no-print mt-3 flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${
-                      isPrepared
-                        ? "border-emerald-300 bg-emerald-100 text-emerald-800"
-                        : "border-black/15 text-black/60 hover:bg-black/5"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isPrepared}
-                      onChange={() => togglePrepared(o.id)}
-                      disabled={!prepConfigured}
-                      className="h-4 w-4 accent-emerald-600"
-                    />
-                    {isPrepared ? "✓ 準備済み" : "準備済みにする"}
-                  </label>
-                )}
-                {/* 印刷時は状態を文字で残す */}
-                {!o.fulfilled && isPrepared && (
-                  <p className="hidden text-xs text-emerald-700 print:block">✓ 準備済み</p>
-                )}
               </div>
               );
             })}

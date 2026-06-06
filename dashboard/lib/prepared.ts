@@ -3,7 +3,7 @@
 
 import { Redis } from "@upstash/redis";
 
-const KEY = "prepared:orders"; // 準備済み注文IDの集合(SET)
+const KEY = "prepared:items"; // 準備済み明細(注文ID#明細index)の集合(SET)
 
 function client(): Redis | null {
   const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
