@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { PackingData } from "@/lib/packing";
+import { beanName, gramsOf } from "@/lib/bean";
 import { num, grams, dateTimeJST } from "@/lib/format";
 import { downloadCSV } from "@/lib/csv";
 
@@ -53,6 +54,28 @@ export function PackingPanel({ data }: { data: PackingData }) {
 
   const toPack = data.orders.filter((o) => !o.fulfilled);
   const preparedToPack = toPack.filter(orderFullyPrepared).length;
+
+  // チェック済み明細から「完了量」をライブ集計（焙煎リスト・仕入りリスト用）
+  const { completedPick, completedRoast } = useMemo(() => {
+    const pick = new Map<string, number>(); // `${title} ${variant}` -> 完了個数
+    const roast = new Map<string, { grams: number; units: number }>(); // 豆 -> 完了量
+    for (const o of data.orders) {
+      if (o.fulfilled) continue;
+      o.lineItems.forEach((li, i) => {
+        if (!prepared.has(itemKey(o.id, i))) return;
+        const variantTitle = li.variantTitle ?? "—";
+        const pk = `${li.title} ${variantTitle}`;
+        pick.set(pk, (pick.get(pk) ?? 0) + li.quantity);
+        const bean = beanName(li.title);
+        const r = roast.get(bean) ?? { grams: 0, units: 0 };
+        r.grams += gramsOf(li.variantTitle) * li.quantity;
+        r.units += li.quantity;
+        roast.set(bean, r);
+      });
+    }
+    return { completedPick: pick, completedRoast: roast };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.orders, prepared]);
 
   const exportPicking = () => {
     const rows: (string | number)[][] = [
@@ -163,16 +186,25 @@ export function PackingPanel({ data }: { data: PackingData }) {
                 <th className="pb-2 font-medium">豆（焙煎度）</th>
                 <th className="pb-2 text-right font-medium">個数</th>
                 <th className="pb-2 text-right font-medium">合計重量</th>
+                <th className="pb-2 text-right font-medium">完了</th>
               </tr>
             </thead>
             <tbody>
-              {data.roastList.map((r, i) => (
-                <tr key={i} className="border-b border-black/5 last:border-0">
-                  <td className="py-2 pr-2 font-medium text-ink">{r.bean}</td>
-                  <td className="py-2 text-right tabular-nums text-black/60">{r.units}</td>
-                  <td className="py-2 text-right text-lg font-bold tabular-nums text-ink">{grams(r.grams)}</td>
-                </tr>
-              ))}
+              {data.roastList.map((r, i) => {
+                const done = completedRoast.get(r.bean)?.grams ?? 0;
+                const full = done >= r.grams && r.grams > 0;
+                return (
+                  <tr key={i} className="border-b border-black/5 last:border-0">
+                    <td className="py-2 pr-2 font-medium text-ink">{r.bean}</td>
+                    <td className="py-2 text-right tabular-nums text-black/60">{r.units}</td>
+                    <td className="py-2 text-right text-lg font-bold tabular-nums text-ink">{grams(r.grams)}</td>
+                    <td className={`py-2 text-right tabular-nums font-medium ${full ? "text-emerald-700" : "text-black/45"}`}>
+                      {full ? "✓ " : ""}
+                      {grams(done)}/{grams(r.grams)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
@@ -216,16 +248,25 @@ export function PackingPanel({ data }: { data: PackingData }) {
                 <th className="pb-2 font-medium">商品（豆）</th>
                 <th className="pb-2 font-medium">挽き目・重量</th>
                 <th className="pb-2 text-right font-medium">準備数</th>
+                <th className="pb-2 text-right font-medium">完了</th>
               </tr>
             </thead>
             <tbody>
-              {data.pickingList.map((p, i) => (
-                <tr key={i} className="border-b border-black/5 last:border-0">
-                  <td className="py-2 pr-2 text-ink">{p.title}</td>
-                  <td className="py-2 pr-2 text-black/70">{p.variantTitle}</td>
-                  <td className="py-2 text-right text-lg font-bold tabular-nums text-ink">{p.quantity}</td>
-                </tr>
-              ))}
+              {data.pickingList.map((p, i) => {
+                const done = completedPick.get(`${p.title} ${p.variantTitle}`) ?? 0;
+                const full = done >= p.quantity && p.quantity > 0;
+                return (
+                  <tr key={i} className="border-b border-black/5 last:border-0">
+                    <td className="py-2 pr-2 text-ink">{p.title}</td>
+                    <td className="py-2 pr-2 text-black/70">{p.variantTitle}</td>
+                    <td className="py-2 text-right text-lg font-bold tabular-nums text-ink">{p.quantity}</td>
+                    <td className={`py-2 text-right tabular-nums font-medium ${full ? "text-emerald-700" : "text-black/45"}`}>
+                      {full ? "✓ " : ""}
+                      {done}/{p.quantity}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

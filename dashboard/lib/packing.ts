@@ -1,6 +1,7 @@
 // 梱包・焙煎用データ。未発送注文から各種の集計を作る。
 
 import { fetchPackingOrders, type PackingOrder } from "./shopify";
+import { beanName, gramsOf, grindOf } from "./bean";
 
 export type PickRow = {
   title: string; // 商品名（豆）
@@ -30,31 +31,6 @@ export type PackingData = {
   pickingList: PickRow[]; // 仕入りリスト（豆×オプションの合計）
   orders: PackingOrder[]; // 注文ごとの梱包伝票
 };
-
-// パッケージ表記を除いた「豆名＋焙煎度」を取り出す。
-function beanName(title: string): string {
-  return title
-    .replace(/(リフィルパック|リフィル|瓶|袋|パック)/g, " ")
-    .replace(/[\s　]+/g, " ")
-    .trim();
-}
-
-// バリアント表記から重量(g)を取り出す（例: "200g(10%OFF) / Whole Bean" → 200）。
-function gramsOf(variantTitle: string | null): number {
-  if (!variantTitle) return 0;
-  const m = variantTitle.match(/(\d+)\s*g/i);
-  return m ? Number(m[1]) : 0;
-}
-
-// バリアント表記から重量を除いた「挽き目」を取り出す。
-function grindOf(variantTitle: string | null): string {
-  if (!variantTitle) return "—";
-  const s = variantTitle
-    .replace(/\d+\s*g(\([^)]*\))?/i, "")
-    .replace(/^[\s　/／]+|[\s　/／]+$/g, "")
-    .trim();
-  return s || "—";
-}
 
 export async function getPackingData(): Promise<PackingData> {
   const all = await fetchPackingOrders();
