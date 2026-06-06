@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "iconv-lite": "^0.7.2",
     "next": "^16.2.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

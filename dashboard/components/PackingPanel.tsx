@@ -53,13 +53,23 @@ export function PackingPanel({ data }: { data: PackingData }) {
           未発送 <span className="font-bold text-ink">{num(data.toPackCount)}</span> 件 / 発送済み{" "}
           {num(data.fulfilledCount)} 件
         </div>
-        <div className="no-print flex gap-2">
+        <div className="no-print flex flex-wrap gap-2">
+          <a
+            href="/api/clickpost-csv"
+            className={`rounded-lg px-3 py-1 text-xs font-medium ${
+              data.toPackCount === 0
+                ? "pointer-events-none border border-black/15 text-black/30"
+                : "bg-ink text-white hover:opacity-90"
+            }`}
+          >
+            クリックポストCSV
+          </a>
           <button
             onClick={exportLabels}
             disabled={data.toPackCount === 0}
             className="rounded-lg border border-black/15 px-3 py-1 text-xs font-medium text-ink hover:bg-black/5 disabled:opacity-40"
           >
-            発送ラベルCSV
+            発送ラベルCSV（汎用）
           </button>
           <button
             onClick={() => window.print()}
@@ -69,6 +79,11 @@ export function PackingPanel({ data }: { data: PackingData }) {
           </button>
         </div>
       </div>
+      {data.toPackCount > 40 && (
+        <p className="no-print -mt-3 text-xs text-amber-700">
+          ※ クリックポストの一括アップロードは1回40件まで。未発送が {data.toPackCount} 件あるので、CSVを分割してアップロードしてください。
+        </p>
+      )}
 
       {/* 焙煎リスト（豆ごとの合計重量） */}
       <div className="rounded-2xl border border-ink/20 bg-white p-5">
