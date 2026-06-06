@@ -1,0 +1,16 @@
+# Sales Dashboard アプリの構成。
+# スコープを「必須（access_scopes.scopes）」にすることで、
+# client_credentials grant で取得するトークンに権限が付与される。
+client_id = "90695548ef4dccc7ac0ad428f65b3d77"
+name = "Sales Dashboard"
+application_url = "https://example.com"
+embedded = true
+
+[access_scopes]
+scopes = "read_orders,read_products,read_customers"
+
+[auth]
+redirect_urls = [ "https://example.com/auth/callback" ]
+
+[webhooks]
+api_version = "2026-04"

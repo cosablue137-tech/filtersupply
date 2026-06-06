@@ -13,17 +13,22 @@ Shopify ストア（`fve1vs-nz.myshopify.com`）の売上と、Instagram（@filt
 
 ---
 
-## 1. Shopify の Custom App を作る（トークン取得）
+## 1. Shopify の認証情報を取得（dev dashboard アプリ）
 
-1. Shopify 管理画面 → **設定 → アプリと販売チャネル → アプリを開発**
-2. **アプリを作成** → 名前は「Sales Dashboard」など
-3. **構成 → Admin API の統合** → スコープに以下を付与:
-   - `read_orders`
-   - `read_products`
-   - `read_customers`
-4. 保存 → **インストール**
-5. **API 認証情報** タブ → **Admin API アクセストークン** を表示してコピー
-   （`shpat_` で始まる文字列。一度しか表示されないので保管する）
+このストアは新しい **dev dashboard**（https://dev.shopify.com）でアプリを管理する方式。
+昔の「Admin API トークンを画面表示」機能は無く、**Client ID / Secret から
+`client_credentials` grant で24時間トークンを自動取得**する（サーバーが自動更新）。
+
+既存アプリ「**Sales Dashboard**」（client_id `90695548ef4dccc7ac0ad428f65b3d77`）を使用。
+
+1. dev dashboard → Sales Dashboard → **設定 → 資格情報** から
+   **Client ID** と **Client secret**（👁で表示）をコピー → `.env.local` に記入
+2. スコープは **必須（required）** で `read_orders, read_products, read_customers` を設定済み
+   （`sales-dashboard-app/shopify.app.toml` を `shopify app deploy` 済み。
+   変更時は dev dashboard の「アプリオートメーショントークン」を作成し
+   `SHOPIFY_APP_AUTOMATION_TOKEN=<token> shopify app deploy --allow-updates` で再デプロイ）
+3. スコープを変えたら **ストアでアプリを再インストール**して許可を更新すること
+   （client_credentials のトークンはインストール時に許可されたスコープを反映するため）
 
 ## 2. Instagram のトークンを取る（Instagram タブ用・任意）
 
@@ -57,7 +62,8 @@ Instagram タブは **Instagram Graph API** で自動取得します。本人の
 
 ```
 SHOPIFY_STORE_DOMAIN=fve1vs-nz.myshopify.com
-SHOPIFY_ADMIN_TOKEN=shpat_...           # 1.で取得したトークン
+SHOPIFY_CLIENT_ID=90695548ef4dccc7ac0ad428f65b3d77  # 1.の Client ID
+SHOPIFY_CLIENT_SECRET=shpss_...         # 1.の Client secret（👁で表示）
 DASHBOARD_PASSWORD=チームで共有する合い言葉
 DASHBOARD_SESSION_SECRET=ランダムな長い文字列   # openssl rand -hex 32 で生成
 

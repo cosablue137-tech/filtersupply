@@ -3,6 +3,16 @@
 
 const API_VERSION = "2026-04";
 
+// この日時より前の注文は全画面で除外する（ストア本格稼働の起点: 2026-06-05 21:00 JST = 12:00 UTC）。
+export const DATA_CUTOFF_ISO = "2026-06-05T12:00:00Z";
+
+// 指定した開始日時とカットオフの「遅い方」を Shopify クエリの下限にする。
+export function effectiveSince(sinceISO: string): string {
+  const since = new Date(sinceISO).getTime();
+  const cutoff = new Date(DATA_CUTOFF_ISO).getTime();
+  return Number.isFinite(since) && since > cutoff ? sinceISO : DATA_CUTOFF_ISO;
+}
+
 function endpoint(): string {
   return `https://${storeDomain()}/admin/api/${API_VERSION}/graphql.json`;
 }
@@ -231,7 +241,7 @@ export async function fetchIgAttribution(period: number): Promise<IgAttribution>
   const since = new Date();
   since.setUTCDate(since.getUTCDate() - period);
   const sinceISO = since.toISOString().slice(0, 10);
-  const queryFilter = `created_at:>=${sinceISO} AND test:false`;
+  const queryFilter = `created_at:>='${effectiveSince(sinceISO)}' AND test:false`;
 
   let cursor: string | null = null;
   let igOrders = 0;
@@ -274,8 +284,9 @@ export async function fetchIgAttribution(period: number): Promise<IgAttribution>
 }
 
 // 指定した開始日（ISO文字列）以降の注文をページネーションで全取得する。
+// カットオフ（DATA_CUTOFF_ISO）より前は常に除外する。
 export async function fetchOrders(sinceISO: string): Promise<Order[]> {
-  const queryFilter = `created_at:>=${sinceISO} AND test:false`;
+  const queryFilter = `created_at:>='${effectiveSince(sinceISO)}' AND test:false`;
   const orders: Order[] = [];
   let cursor: string | null = null;
   // 暴走防止の上限（100件 × 50ページ = 5000件）
@@ -298,6 +309,89 @@ export async function fetchOrders(sinceISO: string): Promise<Order[]> {
           variantTitle: li.variantTitle,
           quantity: li.quantity,
           discountedTotal: num(li.discountedTotalSet),
+        })),
+      });
+    }
+    if (!data.orders.pageInfo.hasNextPage) break;
+    cursor = data.orders.pageInfo.endCursor;
+  }
+  return orders;
+}
+
+// ---- 梱包（フルフィルメント）----
+
+export type PackingLineItem = {
+  title: string;
+  variantTitle: string | null; // 挽き目・重量などのオプション
+  quantity: number;
+};
+
+export type PackingOrder = {
+  id: string;
+  name: string; // #FS1043 など
+  createdAt: string;
+  customerName: string;
+  fulfilled: boolean; // true=発送済み, false=未発送（要梱包）
+  fulfillmentStatus: string;
+  lineItems: PackingLineItem[];
+};
+
+const PACKING_QUERY = /* GraphQL */ `
+  query Packing($cursor: String, $query: String!) {
+    orders(first: 100, after: $cursor, query: $query, sortKey: CREATED_AT) {
+      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+        createdAt
+        displayFulfillmentStatus
+        customer { displayName }
+        shippingAddress { name }
+        lineItems(first: 50) {
+          nodes { title variantTitle quantity }
+        }
+      }
+    }
+  }
+`;
+
+type RawPackingData = {
+  orders: {
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{
+      id: string;
+      name: string;
+      createdAt: string;
+      displayFulfillmentStatus: string;
+      customer: { displayName: string | null } | null;
+      shippingAddress: { name: string | null } | null;
+      lineItems: { nodes: Array<{ title: string; variantTitle: string | null; quantity: number }> };
+    }>;
+  };
+};
+
+// カットオフ以降の注文を梱包用に取得する（発送済み・未発送の両方）。
+export async function fetchPackingOrders(): Promise<PackingOrder[]> {
+  const queryFilter = `created_at:>='${DATA_CUTOFF_ISO}' AND test:false`;
+  const orders: PackingOrder[] = [];
+  let cursor: string | null = null;
+  for (let page = 0; page < 50; page++) {
+    const data: RawPackingData = await adminGraphQL<RawPackingData>(PACKING_QUERY, {
+      cursor,
+      query: queryFilter,
+    });
+    for (const node of data.orders.nodes) {
+      orders.push({
+        id: node.id,
+        name: node.name,
+        createdAt: node.createdAt,
+        customerName: node.shippingAddress?.name || node.customer?.displayName || "（名前なし）",
+        fulfilled: node.displayFulfillmentStatus === "FULFILLED",
+        fulfillmentStatus: node.displayFulfillmentStatus,
+        lineItems: node.lineItems.nodes.map((li) => ({
+          title: li.title,
+          variantTitle: li.variantTitle,
+          quantity: li.quantity,
         })),
       });
     }

@@ -1,6 +1,6 @@
 // 注文データから KPI・日次推移・商品別・顧客の集計を計算する。
 
-import { fetchOrders, type Order } from "./shopify";
+import { fetchOrders, DATA_CUTOFF_ISO, type Order } from "./shopify";
 
 export type Period = 7 | 30 | 60;
 
@@ -44,10 +44,15 @@ function dateKey(iso: string): string {
 function emptyDailyRange(period: Period): Map<string, DailyPoint> {
   const map = new Map<string, DailyPoint>();
   const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  // カットオフ（JST日付）より前の日は表示しない
+  const cutoffKey = new Date(new Date(DATA_CUTOFF_ISO).getTime() + 9 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
   for (let i = period - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setUTCDate(d.getUTCDate() - i);
     const key = d.toISOString().slice(0, 10);
+    if (key < cutoffKey) continue;
     map.set(key, { date: key, sales: 0, orders: 0 });
   }
   return map;
