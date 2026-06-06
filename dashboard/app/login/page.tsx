@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -37,13 +38,28 @@ export default function LoginPage() {
         <h1 className="mb-1 text-lg font-bold text-ink">Filter Supply</h1>
         <p className="mb-6 text-sm text-black/50">売上ダッシュボード</p>
         <label className="mb-2 block text-sm font-medium text-ink">合い言葉</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoFocus
-          className="mb-4 w-full rounded-lg border border-black/15 px-3 py-2 text-ink outline-none focus:border-ink"
-        />
+        {/* type="text" にして日本語(IME)入力を可能にし、CSS でマスク表示する */}
+        <div className="relative mb-4">
+          <input
+            type="text"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+            autoCapitalize="off"
+            autoCorrect="off"
+            autoComplete="off"
+            spellCheck={false}
+            style={{ WebkitTextSecurity: show ? "none" : "disc" } as React.CSSProperties}
+            className="w-full rounded-lg border border-black/15 px-3 py-2 pr-12 text-ink outline-none focus:border-ink"
+          />
+          <button
+            type="button"
+            onClick={() => setShow((s) => !s)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs text-black/50 hover:text-ink"
+          >
+            {show ? "隠す" : "表示"}
+          </button>
+        </div>
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
         <button
           type="submit"
