@@ -1,10 +1,54 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { PackingData } from "@/lib/packing";
 import { num, grams, dateTimeJST } from "@/lib/format";
 import { downloadCSV } from "@/lib/csv";
 
 export function PackingPanel({ data }: { data: PackingData }) {
+  // 「準備済み」チェック（チーム共有・Redis保存）
+  const [prepared, setPreparedState] = useState<Set<string>>(new Set());
+  const [prepConfigured, setPrepConfigured] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/prepared", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d.ids)) setPreparedState(new Set(d.ids));
+        setPrepConfigured(d.configured !== false);
+      })
+      .catch(() => setPrepConfigured(false));
+  }, []);
+
+  const togglePrepared = async (id: string) => {
+    const next = !prepared.has(id);
+    // 楽観的更新
+    setPreparedState((prev) => {
+      const s = new Set(prev);
+      if (next) s.add(id);
+      else s.delete(id);
+      return s;
+    });
+    try {
+      await fetch("/api/prepared", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, prepared: next }),
+      });
+    } catch {
+      // 失敗したら元に戻す
+      setPreparedState((prev) => {
+        const s = new Set(prev);
+        if (next) s.delete(id);
+        else s.add(id);
+        return s;
+      });
+    }
+  };
+
+  const toPack = data.orders.filter((o) => !o.fulfilled);
+  const preparedToPack = toPack.filter((o) => prepared.has(o.id)).length;
+
   const exportPicking = () => {
     const rows: (string | number)[][] = [
       ["商品", "オプション(挽き目/重量)", "準備数"],
@@ -52,6 +96,12 @@ export function PackingPanel({ data }: { data: PackingData }) {
           <span className="font-medium text-ink">{data.cutoffLabel}</span> が対象。
           未発送 <span className="font-bold text-ink">{num(data.toPackCount)}</span> 件 / 発送済み{" "}
           {num(data.fulfilledCount)} 件
+          <span className="ml-2 text-emerald-700">
+            準備済み <span className="font-bold">{num(preparedToPack)}</span>/{num(data.toPackCount)}
+          </span>
+          {!prepConfigured && (
+            <span className="ml-2 text-amber-700">（準備チェックの保存先が未設定）</span>
+          )}
         </div>
         <div className="no-print flex flex-wrap gap-2">
           <a
@@ -183,11 +233,17 @@ export function PackingPanel({ data }: { data: PackingData }) {
           <p className="text-sm text-black/45">対象の注文はありません。</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
-            {data.orders.map((o) => (
+            {data.orders.map((o) => {
+              const isPrepared = prepared.has(o.id);
+              return (
               <div
                 key={o.id}
                 className={`rounded-xl border p-4 ${
-                  o.fulfilled ? "border-black/10 bg-black/[0.02] opacity-60" : "border-ink/20 bg-white"
+                  o.fulfilled
+                    ? "border-black/10 bg-black/[0.02] opacity-60"
+                    : isPrepared
+                    ? "border-emerald-300 bg-emerald-50/50"
+                    : "border-ink/20 bg-white"
                 }`}
               >
                 <div className="mb-2 flex items-center justify-between">
@@ -228,8 +284,31 @@ export function PackingPanel({ data }: { data: PackingData }) {
                     </li>
                   ))}
                 </ul>
+                {!o.fulfilled && (
+                  <label
+                    className={`no-print mt-3 flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${
+                      isPrepared
+                        ? "border-emerald-300 bg-emerald-100 text-emerald-800"
+                        : "border-black/15 text-black/60 hover:bg-black/5"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isPrepared}
+                      onChange={() => togglePrepared(o.id)}
+                      disabled={!prepConfigured}
+                      className="h-4 w-4 accent-emerald-600"
+                    />
+                    {isPrepared ? "✓ 準備済み" : "準備済みにする"}
+                  </label>
+                )}
+                {/* 印刷時は状態を文字で残す */}
+                {!o.fulfilled && isPrepared && (
+                  <p className="hidden text-xs text-emerald-700 print:block">✓ 準備済み</p>
+                )}
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
