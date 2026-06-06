@@ -23,6 +23,10 @@ export function PackingPanel({ data }: { data: PackingData }) {
 
   const totalGrams = data.roastList.reduce((s, r) => s + r.grams, 0);
 
+  // 注文からの経過日数（JST基準のざっくり日数）
+  const daysSince = (iso: string) =>
+    Math.floor((Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000));
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-black/60">
@@ -138,13 +142,25 @@ export function PackingPanel({ data }: { data: PackingData }) {
               >
                 <div className="mb-2 flex items-center justify-between">
                   <span className="font-bold text-ink">{o.name}</span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                      o.fulfilled ? "bg-black/10 text-black/50" : "bg-amber-100 text-amber-800"
-                    }`}
-                  >
-                    {o.fulfilled ? "発送済み" : "未発送"}
-                  </span>
+                  {(() => {
+                    if (o.fulfilled)
+                      return (
+                        <span className="rounded-full bg-black/10 px-2 py-0.5 text-[11px] font-medium text-black/50">
+                          発送済み
+                        </span>
+                      );
+                    const d = daysSince(o.createdAt);
+                    const urgent = d >= 3;
+                    return (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                          urgent ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        未発送{d > 0 ? `・${d}日経過` : "・本日"}
+                      </span>
+                    );
+                  })()}
                 </div>
                 <p className="mb-2 text-xs text-black/45">
                   {o.customerName} ・ {dateTimeJST(o.createdAt)}
