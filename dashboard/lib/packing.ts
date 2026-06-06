@@ -33,7 +33,14 @@ export type PackingData = {
 };
 
 export async function getPackingData(): Promise<PackingData> {
-  const all = await fetchPackingOrders();
+  const fetched = await fetchPackingOrders();
+  // 発送完了から3日経った注文は梱包欄から除外する（未発送・最近の発送済みは残す）
+  const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+  const all = fetched.filter((o) => {
+    if (!o.fulfilled) return true;
+    if (!o.fulfilledAt) return true; // 発送日不明は残す
+    return Date.now() - new Date(o.fulfilledAt).getTime() <= THREE_DAYS;
+  });
   const toPack = all.filter((o) => !o.fulfilled);
 
   const pickMap = new Map<string, PickRow>();

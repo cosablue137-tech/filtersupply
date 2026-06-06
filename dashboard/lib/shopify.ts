@@ -358,6 +358,7 @@ export type PackingOrder = {
   total: number; // 税抜き小計
   fulfilled: boolean; // true=発送済み, false=未発送（要梱包）
   fulfillmentStatus: string;
+  fulfilledAt: string | null; // 発送(fulfillment)日時。未発送はnull
   address: ShipAddress; // 発送ラベル用
   lineItems: PackingLineItem[];
 };
@@ -371,6 +372,7 @@ const PACKING_QUERY = /* GraphQL */ `
         name
         createdAt
         displayFulfillmentStatus
+        fulfillments(first: 10) { createdAt }
         currentSubtotalPriceSet { shopMoney { amount } }
         customer { displayName }
         shippingAddress {
@@ -408,6 +410,7 @@ type RawPackingData = {
       name: string;
       createdAt: string;
       displayFulfillmentStatus: string;
+      fulfillments: Array<{ createdAt: string }> | null;
       currentSubtotalPriceSet: { shopMoney: { amount: string } } | null;
       customer: { displayName: string | null } | null;
       shippingAddress: RawShippingAddress | null;
@@ -429,6 +432,7 @@ export async function fetchPackingOrders(): Promise<PackingOrder[]> {
     for (const node of data.orders.nodes) {
       if (isExcludedOrder(node.name)) continue;
       const sa = node.shippingAddress;
+      const fdates = (node.fulfillments ?? []).map((f) => f.createdAt).sort();
       orders.push({
         id: node.id,
         name: node.name,
@@ -437,6 +441,7 @@ export async function fetchPackingOrders(): Promise<PackingOrder[]> {
         total: num(node.currentSubtotalPriceSet),
         fulfilled: node.displayFulfillmentStatus === "FULFILLED",
         fulfillmentStatus: node.displayFulfillmentStatus,
+        fulfilledAt: fdates.length ? fdates[fdates.length - 1] : null,
         address: {
           name: sa?.name ?? "",
           zip: sa?.zip ?? "",
