@@ -13,6 +13,12 @@ export function effectiveSince(sinceISO: string): string {
   return Number.isFinite(since) && since > cutoff ? sinceISO : DATA_CUTOFF_ISO;
 }
 
+// テスト注文など、全画面から除外する注文番号（name）。
+const EXCLUDED_ORDER_NAMES = new Set(["#FS1025", "#FS1026"]);
+function isExcludedOrder(name: string): boolean {
+  return EXCLUDED_ORDER_NAMES.has(name);
+}
+
 function endpoint(): string {
   return `https://${storeDomain()}/admin/api/${API_VERSION}/graphql.json`;
 }
@@ -127,6 +133,7 @@ const ORDERS_QUERY = /* GraphQL */ `
       }
       nodes {
         id
+        name
         createdAt
         currentSubtotalPriceSet {
           shopMoney {
@@ -164,6 +171,7 @@ type RawOrdersData = {
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
     nodes: Array<{
       id: string;
+      name: string;
       createdAt: string;
       currentSubtotalPriceSet: { shopMoney: { amount: string } } | null;
       currentTotalPriceSet: { shopMoney: { amount: string } } | null;
@@ -208,6 +216,7 @@ const ATTRIBUTION_QUERY = /* GraphQL */ `
       pageInfo { hasNextPage endCursor }
       nodes {
         id
+        name
         currentSubtotalPriceSet { shopMoney { amount } }
         customerJourneySummary {
           firstVisit { source referrerUrl }
@@ -223,6 +232,7 @@ type RawAttrData = {
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
     nodes: Array<{
       id: string;
+      name: string;
       currentSubtotalPriceSet: { shopMoney: { amount: string } } | null;
       customerJourneySummary: {
         firstVisit: { source: string | null; referrerUrl: string | null } | null;
@@ -255,6 +265,7 @@ export async function fetchIgAttribution(period: number): Promise<IgAttribution>
       query: queryFilter,
     });
     for (const node of data.orders.nodes) {
+      if (isExcludedOrder(node.name)) continue;
       const sales = num(node.currentSubtotalPriceSet);
       totalOrders += 1;
       totalSales += sales;
@@ -296,6 +307,7 @@ export async function fetchOrders(sinceISO: string): Promise<Order[]> {
       query: queryFilter,
     });
     for (const node of data.orders.nodes) {
+      if (isExcludedOrder(node.name)) continue;
       orders.push({
         id: node.id,
         createdAt: node.createdAt,
@@ -381,6 +393,7 @@ export async function fetchPackingOrders(): Promise<PackingOrder[]> {
       query: queryFilter,
     });
     for (const node of data.orders.nodes) {
+      if (isExcludedOrder(node.name)) continue;
       orders.push({
         id: node.id,
         name: node.name,
