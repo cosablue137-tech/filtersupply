@@ -31,6 +31,8 @@ export type Metrics = {
     newCount: number;
     returningCount: number;
     repeatRate: number; // リピート率（%）
+    // 購入した顧客の「累計購入回数」分布（リピート分析）
+    frequency: { label: string; count: number }[];
   };
   // 直前の同じ長さの期間との比較
   comparison: {
@@ -100,6 +102,22 @@ export function aggregate(orders: Order[], period: Period): Metrics {
   const returningCount = orderCount - newCount;
   const repeatRate = orderCount > 0 ? (returningCount / orderCount) * 100 : 0;
 
+  // 購入回数分布（この期間に購入したユニーク顧客の累計購入回数で分類）
+  const seen = new Map<string, number>();
+  let guestIdx = 0;
+  for (const o of orders) {
+    const key = o.customerId ?? `guest-${guestIdx++}`;
+    seen.set(key, Math.max(seen.get(key) ?? 0, o.lifetimeOrders || 1));
+  }
+  const buckets = { "1回": 0, "2回": 0, "3〜5回": 0, "6回以上": 0 };
+  for (const n of seen.values()) {
+    if (n <= 1) buckets["1回"]++;
+    else if (n === 2) buckets["2回"]++;
+    else if (n <= 5) buckets["3〜5回"]++;
+    else buckets["6回以上"]++;
+  }
+  const frequency = Object.entries(buckets).map(([label, count]) => ({ label, count }));
+
   return {
     period,
     generatedAt: new Date().toISOString(),
@@ -111,7 +129,7 @@ export function aggregate(orders: Order[], period: Period): Metrics {
     },
     daily: Array.from(daily.values()),
     products,
-    customers: { newCount, returningCount, repeatRate },
+    customers: { newCount, returningCount, repeatRate, frequency },
     comparison: { prevSales: 0, prevOrders: 0, salesDelta: null, ordersDelta: null },
   };
 }

@@ -46,6 +46,22 @@ export function CustomerStats({ customers }: { customers: Metrics["customers"] }
           </ul>
         </div>
       )}
+
+      {customers.frequency.some((f) => f.count > 0) && (
+        <div className="mt-5 border-t border-black/5 pt-4">
+          <p className="mb-2 text-xs font-medium text-black/40">購入回数分布（顧客の累計）</p>
+          <div className="flex flex-wrap gap-2">
+            {customers.frequency.map((f) => (
+              <span
+                key={f.label}
+                className="rounded-full border border-black/10 bg-black/[0.02] px-3 py-1 text-sm"
+              >
+                {f.label} <span className="ml-1 font-bold text-ink">{num(f.count)}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

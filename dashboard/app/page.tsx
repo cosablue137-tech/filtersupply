@@ -11,13 +11,20 @@ import { CustomerStats } from "@/components/CustomerStats";
 import { PeriodSelector } from "@/components/PeriodSelector";
 import { InstagramPanel } from "@/components/InstagramPanel";
 import { PackingPanel } from "@/components/PackingPanel";
+import { OrdersPanel } from "@/components/OrdersPanel";
 import type { PackingData } from "@/lib/packing";
+import type { PackingOrder } from "@/lib/shopify";
 import { yen, num } from "@/lib/format";
 import { downloadCSV } from "@/lib/csv";
 
 const REFRESH_MS = 60_000;
-type Tab = "sales" | "packing" | "instagram";
-const TAB_LABELS: Record<Tab, string> = { sales: "売上", packing: "梱包", instagram: "Instagram" };
+type Tab = "sales" | "packing" | "orders" | "instagram";
+const TAB_LABELS: Record<Tab, string> = {
+  sales: "売上",
+  packing: "梱包",
+  orders: "注文",
+  instagram: "Instagram",
+};
 type IgPayload = IgMetrics & { attribution: IgAttribution | null; cached?: boolean };
 
 export default function DashboardPage() {
@@ -26,6 +33,7 @@ export default function DashboardPage() {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [ig, setIg] = useState<IgPayload | null>(null);
   const [packing, setPacking] = useState<PackingData | null>(null);
+  const [orders, setOrders] = useState<PackingOrder[] | null>(null);
   const [error, setError] = useState("");
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,14 +83,30 @@ export default function DashboardPage() {
     }
   }, []);
 
+  const loadOrders = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/orders`, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error ?? "取得に失敗しました");
+      setOrders(data.orders);
+      setUpdatedAt(new Date());
+      setError("");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "取得に失敗しました");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // タブ・期間が変わるたびに該当データを取得
   useEffect(() => {
     setLoading(true);
     setError("");
     if (tab === "sales") loadSales(period);
     else if (tab === "packing") loadPacking();
+    else if (tab === "orders") loadOrders();
     else loadIg(period);
-  }, [tab, period, loadSales, loadIg, loadPacking]);
+  }, [tab, period, loadSales, loadIg, loadPacking, loadOrders]);
 
   // 売上・梱包タブは 60 秒自動更新（IG はレート制限のためサーバ側1hキャッシュ）
   useEffect(() => {
@@ -192,6 +216,20 @@ export default function DashboardPage() {
           {packing && (
             <div className={loading ? "opacity-60 transition" : "transition"}>
               <PackingPanel data={packing} />
+            </div>
+          )}
+        </>
+      )}
+
+      {/* 注文タブ */}
+      {tab === "orders" && (
+        <>
+          {!orders && loading && !error && (
+            <p className="text-sm text-black/45">注文を取得しています…</p>
+          )}
+          {orders && (
+            <div className={loading ? "opacity-60 transition" : "transition"}>
+              <OrdersPanel orders={orders} />
             </div>
           )}
         </>

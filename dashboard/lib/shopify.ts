@@ -121,6 +121,7 @@ export type Order = {
   totalSales: number;
   customerId: string | null;
   isFirstOrderForCustomer: boolean;
+  lifetimeOrders: number; // 顧客の累計注文数
   lineItems: OrderLineItem[];
 };
 
@@ -316,6 +317,7 @@ export async function fetchOrders(sinceISO: string): Promise<Order[]> {
         customerId: node.customer?.id ?? null,
         // numberOfOrders は累計注文数。1ならこの顧客の初回注文とみなす。
         isFirstOrderForCustomer: node.customer?.numberOfOrders === "1",
+        lifetimeOrders: Number(node.customer?.numberOfOrders ?? "0"),
         lineItems: node.lineItems.nodes.map((li) => ({
           title: li.title,
           variantTitle: li.variantTitle,
@@ -353,6 +355,7 @@ export type PackingOrder = {
   name: string; // #FS1043 など
   createdAt: string;
   customerName: string;
+  total: number; // 税抜き小計
   fulfilled: boolean; // true=発送済み, false=未発送（要梱包）
   fulfillmentStatus: string;
   address: ShipAddress; // 発送ラベル用
@@ -368,6 +371,7 @@ const PACKING_QUERY = /* GraphQL */ `
         name
         createdAt
         displayFulfillmentStatus
+        currentSubtotalPriceSet { shopMoney { amount } }
         customer { displayName }
         shippingAddress {
           name
@@ -404,6 +408,7 @@ type RawPackingData = {
       name: string;
       createdAt: string;
       displayFulfillmentStatus: string;
+      currentSubtotalPriceSet: { shopMoney: { amount: string } } | null;
       customer: { displayName: string | null } | null;
       shippingAddress: RawShippingAddress | null;
       lineItems: { nodes: Array<{ title: string; variantTitle: string | null; quantity: number }> };
@@ -429,6 +434,7 @@ export async function fetchPackingOrders(): Promise<PackingOrder[]> {
         name: node.name,
         createdAt: node.createdAt,
         customerName: sa?.name || node.customer?.displayName || "（名前なし）",
+        total: num(node.currentSubtotalPriceSet),
         fulfilled: node.displayFulfillmentStatus === "FULFILLED",
         fulfillmentStatus: node.displayFulfillmentStatus,
         address: {
